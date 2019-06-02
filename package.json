@@ -1,0 +1,20 @@
+{
+  "name": "adatrivia",
+  "version": "1.0.0",
+  "description": "Proyecto de Trivia para Ada",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "author": "Pablo Hoc",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "dotenv": "^8.0.0",
+    "express": "^4.17.0",
+    "express-validator": "^5.3.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.2.6"
+  }
+}
