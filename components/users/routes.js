@@ -2,7 +2,7 @@ const controller = require('./controller');
 const express = require('express');
 const router = express.Router();
 const validator = require('./validator');
-const checkValidationResult = require('middlewares/checkValidationResult');
+const checkValidationResult = require('./../../middlewares/checkValidationResult');
 
 router.get('/:username', controller.getByUsername);
 

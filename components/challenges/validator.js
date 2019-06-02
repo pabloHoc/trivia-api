@@ -1,6 +1,6 @@
 const { check } = require('express-validator/check')
-const MSGS = require('utils/validation/validationMsgs');
-const validators = require('utils/validation/customValidators');
+const MSGS = require('./../../utils/validation/validationMsgs');
+const validators = require('./../../utils/validation/customValidators');
 
 module.exports = method => {
     switch(method) {

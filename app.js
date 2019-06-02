@@ -14,17 +14,16 @@ const app = express();
 // Absolute module paths
 const dotenv = require('dotenv');
 dotenv.config();
-require('module').Module._initPaths();
 
-const { port } = require('configs/config');
+const { port } = require('./configs/config');
 
 // Routes
 
-const questionsRoutes = require('components/questions/routes');
-const challengesRoutes = require('components/challenges/routes');
-const competitionsRoutes = require('components/competitions/routes');
-const categoriesRoutes = require('components/categories/routes');
-const usersRoutes = require('components/users/routes');
+const questionsRoutes = require('./components/questions/routes');
+const challengesRoutes = require('./components/challenges/routes');
+const competitionsRoutes = require('./components/competitions/routes');
+const categoriesRoutes = require('./components/categories/routes');
+const usersRoutes = require('./components/users/routes');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

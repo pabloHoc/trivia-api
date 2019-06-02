@@ -1,5 +1,5 @@
-const db = require('db/db');
-const COLLECTIONS = require('db/collections');
+const db = require('./../../db/db');
+const COLLECTIONS = require('./../../db/collections');
 const ObjectId = require('mongodb').ObjectId;
 
 /**

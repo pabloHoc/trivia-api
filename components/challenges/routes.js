@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const controller = require('./controller');
 const validator = require('./validator');
-const checkValidationResult = require('middlewares/checkValidationResult');
+const checkValidationResult = require('./../../middlewares/checkValidationResult');
 
 router.get('/all/:sort?/:page?', controller.getAll);
 router.get('/find/:id', validator('getChallenge'), checkValidationResult, controller.get);

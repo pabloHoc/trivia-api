@@ -1,5 +1,5 @@
 const mongo = require('mongodb').MongoClient;
-const { url, db } = require('configs/db');
+const { url, db } = require('./../configs/db');
 
 let connection;
 

@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
-const { SECRET } = require('configs/config');
-const db = require('db/db');
-const COLLECTIONS = require('db/collections');
+const { SECRET } = require('./../../configs/config');
+const db = require('./../../db/db');
+const COLLECTIONS = require('./../../db/collections');
 const bcrypt = require('bcrypt');
 
 class Controller {
