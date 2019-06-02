@@ -32,6 +32,11 @@ app.listen(port, () => {
     console.log(`Listening to port: ${port}`);
 });
 
+process.on('uncaughtException', (err) => {
+    console.error('There was an uncaught error', err);
+    process.exit(1);
+})
+
 app.use('/categories', categoriesRoutes);
 app.use('/challenges', challengesRoutes);
 app.use('/questions', questionsRoutes);
