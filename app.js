@@ -10,6 +10,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
+const cors = require('cors')
 
 // Absolute module paths
 const dotenv = require('dotenv');
@@ -24,6 +25,9 @@ const challengesRoutes = require('./components/challenges/routes');
 const competitionsRoutes = require('./components/competitions/routes');
 const categoriesRoutes = require('./components/categories/routes');
 const usersRoutes = require('./components/users/routes');
+
+app.use(cors());
+app.options('*', cors());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
