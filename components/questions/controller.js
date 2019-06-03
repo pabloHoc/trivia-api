@@ -12,28 +12,47 @@ const ObjectId = require('mongodb').ObjectId;
 class Controller {
     static async add(req, res) {
         try {
-            let {username, question, answer, answers, category} = req.body;
+            let user;
+            let { username, question, answer, answers, category } = req.body;
             
             /** 
              *  TODO: esto se podría mejorar buscando categoria
              *  y usuario en simultaneo, ya que no necesita hacerse uno tras otro
              */
 
-            let collection = await db.getCollection(COLLECTIONS.CATEGORIES);
-            category = await collection.findOne({ name: category });
+            const findCategory = (category) => { return new Promise(async (resolve, reject) => {
+                let collection = await db.getCollection(COLLECTIONS.CATEGORIES);
+                category = await collection.findOne({ name: category });
 
-            if (!category)
-                throw new Error("Categoria inexistente");
+                if (category)
+                    resolve(category);
+                else
+                    reject(new Error('Categoría no encontrada'));                    
+                })
+            };    
 
-            collection = await db.getCollection(COLLECTIONS.USERS);
-            let user = await collection.findOne({ username: username });
-    
+            const findUser = (username) => { return new Promise(async (resolve, reject) => {
+                let collection = await db.getCollection(COLLECTIONS.USERS);
+                let user = await collection.findOne({ username: username });
+                
+                if (user)
+                    resolve(user);
+                else
+                    reject(new Error('Usuarix no encontradx'));                    
+                })
+            };                
+
+            [user, category] = await Promise.all([findUser(username), findCategory(category)]);
+
             if (!user)
-                throw new Error("Usuarix inexistente");                
+                throw new Error("Usuarix inexistente");    
+                
+            if (!category)
+                throw new Error("Categoria inexistente");                
 
-            collection = await db.getCollection(COLLECTIONS.QUESTIONS);
+            let collection = await db.getCollection(COLLECTIONS.QUESTIONS);
 
-            await collection.insertOne({
+            let result = await collection.insertOne({
                 user: user._id,
                 question: question,
                 answer: answer,
@@ -42,9 +61,11 @@ class Controller {
                 likes: 0,
                 date: new Date(Date.now()).toISOString()
             });
+
             res.status(200).send({
                 success: true,
-                message: "Pregunta añadida con éxito"
+                message: "Pregunta añadida con éxito",
+                question_id: result.insertedId
             });
         } catch (error) {
             return res.status(400).send({
@@ -224,6 +245,35 @@ class Controller {
 
         let aggregation = Controller.getLookup();
         aggregation.push({$sort: sort}, { $skip: page * 10 }, { $limit: 10 });
+
+        try {
+            const collection = await db.getCollection(COLLECTIONS.QUESTIONS);
+            const result = await collection
+                                    .aggregate(aggregation)
+                                    .toArray();
+
+            res.status(200).send({
+                success: true,
+                questions: result
+            });
+
+        } catch (error) {
+            console.log(error)
+            res.status(400).send({
+                success: false,
+                message: "Error al obtener preguntas",
+                message: error.message,
+                trace: error.stack
+            });
+        }
+    }
+
+    static async search(req, res) {
+        const { query, page = 0 } = req.params;
+        
+        let aggregation = Controller.getLookup();
+        aggregation.unshift({ $match: { question: {'$regex' : query, $options: 'i' }}});
+        aggregation.push({ $skip: page * 10 }, { $limit: 10 });
 
         try {
             const collection = await db.getCollection(COLLECTIONS.QUESTIONS);
