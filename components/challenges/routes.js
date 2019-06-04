@@ -9,6 +9,8 @@ router.get('/getrandom', controller.getRandom);
 router.get('/byuser/:username/:sort?/:page?', validator('getByUsername'), checkValidationResult, controller.getByUsername);
 router.get('/search/:query/:page?', controller.search);
 
+router.post('/upvote/:id', controller.upvote);
+router.post('/downvote/:id', controller.downvote);
 router.post('/', validator('addChallenge'), checkValidationResult, controller.add);
 
 module.exports = router;

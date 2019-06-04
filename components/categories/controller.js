@@ -43,31 +43,31 @@ class Controller {
         try {
             let collection = await db.getCollection(COLLECTIONS.QUESTIONS);
             let categories = await collection
-                                    .aggregate([{
-                                        $lookup: {
-                                            from: 'categories',
-                                            localField: 'category',
-                                            foreignField: '_id',
-                                            as: 'category',
-                                        }
-                                    }, {
-                                        $unwind: '$category'
-                                    }, {
-                                        $group: {
-                                            _id: {
-                                                name: '$category.name'
-                                            },
-                                            name: { $first: '$category.name'}, 
-                                            questions: { $sum: 1 }
-                                        }
-                                    }, {
-                                        $project: {
-                                            _id: 0
-                                        }
-                                    }, {
-                                        $sort: sort
-                                    }])
-                                    .toArray();
+                .aggregate([{
+                    $lookup: {
+                        from: 'categories',
+                        localField: 'category',
+                        foreignField: '_id',
+                        as: 'category',
+                    }
+                }, {
+                    $unwind: '$category'
+                }, {
+                    $group: {
+                        _id: {
+                            name: '$category.name'
+                        },
+                        name: { $first: '$category.name'}, 
+                        questions: { $sum: 1 }
+                    }
+                }, {
+                    $project: {
+                        _id: 0
+                    }
+                }, {
+                    $sort: sort
+                }])
+                .toArray();
 
             res.status(200).send({
                 success: true,

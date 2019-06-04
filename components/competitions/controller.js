@@ -8,12 +8,16 @@ class Controller {
         let { username } = req.body;
         let challenger;
         
+        /**
+         * TODO: testear
+         */
+
         try {
             let collection = await db.getCollection(COLLECTIONS.USERS);
             
             [challenged, challenger] = await Promise.all([
-                await collection.findOne({ username: challenged}),
-                await collection.findOne({ username: username})
+                collection.findOne({ username: challenged}),
+                collection.findOne({ username: username})
             ])
 
             if (!challenged || !challenger)

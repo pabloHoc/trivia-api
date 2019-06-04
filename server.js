@@ -5,6 +5,10 @@
  *  * En el token tiene que estar el username
  *  * Middleware que chequee que haya token
  *  * Middleware que ponga el username en el body de la request
+ * 
+ *  * Evitar preguntas repetidas respondidas correctamente
+ *  * Impedir votos dobles
+ *  
  */
 
 const 

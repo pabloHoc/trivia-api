@@ -241,6 +241,42 @@ class Controller {
             });
         }
     }
+
+    static upvote(req, res) {
+        Controller.vote(req, res, 1);
+    }
+
+    static downvote(req, res) {
+        Controller.vote(req, res, -1);
+    }
+
+    static async vote(req, res, vote) {
+        const { id } = req.params;
+        try {
+            const collection = await db.getCollection(COLLECTIONS.CHALLENGES);
+            
+            await collection.updateOne(
+                { 
+                    _id: ObjectId(id) 
+                }, {
+                    $inc: {
+                        likes: vote
+                    }
+                });
+
+            res.status(200).send({
+                success: true
+            });
+
+        } catch(error) {
+            res.status(400).send({
+                success: false,
+                message: "Error al votar pregunta",
+                message: error.message,
+                trace: error.stack
+            });
+        }
+    }
     
     static getLookup() {
         return [
