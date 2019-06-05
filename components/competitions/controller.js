@@ -1,16 +1,15 @@
-const db = require('./../../db/db');
-const COLLECTIONS = require('./../../db/collections');
-const ObjectId = require('mongodb').ObjectId;
+const 
+    db = require('./../../db/db'),
+    COLLECTIONS = require('./../../db/collections'),
+    ObjectId = require('mongodb').ObjectId,
+    eventEmitter = require('./../notifications/emitter'),
+    EVENTS = require('./../notifications/events');
 
 class Controller {
     static async add(req, res) {
         let { challenged, category = 'random' } = req.params;
         let { username } = req.body;
         let challenger;
-        
-        /**
-         * TODO: testear
-         */
 
         try {
             let collection = await db.getCollection(COLLECTIONS.USERS);
@@ -21,7 +20,7 @@ class Controller {
             ])
 
             if (!challenged || !challenger)
-                throw new Error("Usuario no encontrado");
+                throw new Error('Usuarix no encontradx');
             
             if (category !== 'random') {
                 collection = await db.getCollection(COLLECTIONS.CATEGORIES);
@@ -29,7 +28,7 @@ class Controller {
             }
 
             if (!category)
-                throw new Error("Categoría no encontrada");
+                throw new Error('Categoría no encontrada');
 
             collection = await db.getCollection(COLLECTIONS.COMPETITIONS);
             await collection.insertOne({
@@ -42,6 +41,8 @@ class Controller {
                 category: category,
                 date: new Date(Date.now()).toISOString()
             })                
+
+            eventEmitter.emit(EVENTS.NEW_COMPETITION, { username: challenged.username, payload: challenger.username});
 
             return res.status(200).send({
                 success: true,
@@ -56,29 +57,28 @@ class Controller {
             });
         }
     }
+
     static async getByUser(req, res) {
-        let { username, status = 'all', page = 0 } = req.params;
+        const { username } = req.body;
+        let { status = 'all', page = 0 } = req.params;
         
         let query = {}
 
         switch (status) {
             case 'pending':
                 query = {
-                    $or: [
-                        { 
-                            challenged: username,
-                            challenged_finished: false
-                        }, { 
-                            challenger: username,
-                            challenger_finished: false 
-                        }
-                    ]
+                    $or: [{ 
+                        challenged: username,
+                        challenged_finished: false 
+                    }, { 
+                        challenger: username,
+                        challenger_finished: false 
+                    }]
                 }                                
                 break;
             case 'played':
                 query = {
-                    $or: [
-                        { 
+                    $or: [{ 
                             challenged: username,
                             challenged_finished: true,
                             challenger_finished: false,
@@ -86,51 +86,44 @@ class Controller {
                             challenger: username,
                             challenged_finished: false,
                             challenger_finished: true, 
-                        }
-                    ]
+                        }]
                 }                
                 break                
             case 'finished':
                 query = {
                     challenged_finished: true,
                     challenger_finished: true,                    
-                    $or: [
-                        { 
-                            challenged: username,
-                        }, { 
-                            challenger: username,
-                        }
-                    ]
+                    $or: [{ 
+                        challenged: username,
+                    }, { 
+                        challenger: username,
+                    }]
                 }                
                 break;
             case 'won':
                     query = {
                         challenged_finished: true,
                         challenger_finished: true,                        
-                        $or: [
-                            { 
-                                challenged: username,
-                                $where : 'this.challenged_points > this.challenger_points',
-                            }, { 
-                                challenger: username,
-                                $where : 'this.challenged_points < this.challenger_points',
-                            }
-                        ]
+                        $or: [{ 
+                            challenged: username,
+                            $where : 'this.challenged_points > this.challenger_points',
+                        }, { 
+                            challenger: username,
+                            $where : 'this.challenged_points < this.challenger_points',
+                        }]
                     }                
                     break;  
             case 'lost':
                     query = {
                         challenged_finished: true,
                         challenger_finished: true,
-                        $or: [
-                            { 
-                                challenged: username,
-                                $where : 'this.challenged_points < this.challenger_points',
-                            }, { 
-                                challenger: username,
-                                $where : 'this.challenged_points > this.challenger_points',
-                            }
-                        ]
+                        $or: [{ 
+                            challenged: username,
+                            $where : 'this.challenged_points < this.challenger_points',
+                        }, { 
+                            challenger: username,
+                            $where : 'this.challenged_points > this.challenger_points',
+                        }]
                     }                
                     break;
             case 'draw':
@@ -138,13 +131,11 @@ class Controller {
                         challenged_finished: true,
                         challenger_finished: true,
                         $where : 'this.challenged_points == this.challenger_points',
-                        $or: [
-                            { 
-                                challenged: username
-                            }, { 
-                                challenger: username,
-                            }
-                        ]
+                        $or: [{ 
+                            challenged: username
+                        }, { 
+                            challenger: username,
+                        }]
                     }                
                     break;                                                             
             default:
@@ -158,8 +149,8 @@ class Controller {
         }
 
         try {
-            let collection = await db.getCollection(COLLECTIONS.COMPETITIONS);
-            let result = await collection
+            const collection = await db.getCollection(COLLECTIONS.COMPETITIONS);
+            const result = await collection
                                 .find(query)
                                 .skip(page * 10)
                                 .limit(10)
@@ -180,44 +171,88 @@ class Controller {
     }
 
     static async play(req, res) {
-        let { id, username, points } = req.params;
+        const { username } = req.body;
+        const { id, points } = req.params;
 
         try {
             if (points > 10)
                 throw new Error('No pueden sumarse más de 10 puntos');
 
-            let collection = await db.getCollection(COLLECTIONS.COMPETITIONS);
-            let result = await collection.findOne({ _id: ObjectId(id) });
+            const collection = await db.getCollection(COLLECTIONS.COMPETITIONS);
+            const competition = await collection.findOne({ _id: ObjectId(id) });
 
-            if (!result)
+            if (!competition)
                 throw new Error('Competición no encontrada');
 
-            if (result.challenger !== username && result.challenged !== username)
-                throw new Error('Usuario no pertenece a competición');
+            if (competition.challenger !== username && competition.challenged !== username)
+                throw new Error('Usuarix no pertenece a competición');
                 
-            if ((result.challenger === username && result.challenger_finished) ||
-                (result.challeged === username && result.challenged_finished))
-                throw new Error('Usuario ya ha jugado');            
+            if ((competition.challenger === username && competition.challenger_finished) ||
+                (competition.challeged === username && competition.challenged_finished))
+                throw new Error('Usuarix ya ha jugado');            
 
             let update = {};
             
-            if (result.challenger === username)
+            if (competition.challenger === username) {
+                competition.challenger_finished = true;
+                competition.challenger_points = points;
+
                 update = {
                     $set: {
                         challenger_finished: true,
                         challenger_points: points    
                     }
                 }
+            } else if (competition.challenged === username) {
+                competition.challenged_finished = true;
+                competition.challenged_points = points;
 
-            if (result.challenged === username)
                 update = {
                     $set: {
                         challenged_finished: true,
                         challenged_points: points
                     }                        
                 }
-
+            }
+                
             await collection.updateOne({ _id: ObjectId(id) }, update);                
+
+            if (competition.challenger_finished && competition.challenged_finished) {
+                if (competition.challenger_points > competition.challenged_points) {
+                    eventEmitter.emit(EVENTS.COMPETITION_WON, { 
+                            username: competition.challenger, 
+                            payload:  competition.challenged,
+                            extra: `${competition.challenger_points}-${competition.challenged_points}`
+                        });
+                    eventEmitter.emit(EVENTS.COMPETITION_LOST, {   
+                            username: competition.challenged, 
+                            payload:  competition.challenger,
+                            extra: `${competition.challenged_points}-${competition.challenger_points}`
+                        })                          
+                } else if (competition.challenger_points === competition.challenged_points) {
+                    eventEmitter.emit(EVENTS.COMPETITION_DRAW,{ 
+                        username: competition.challenged, 
+                        payload:  competition.challenger,
+                        extra: `${competition.challenged_points}-${competition.challenger_points}`
+                    });
+                    eventEmitter.emit(EVENTS.COMPETITION_DRAW, { 
+                        username: competition.challenger, 
+                        payload:  competition.challenged,
+                        extra: `${competition.challenger_points}-${competition.challenged_points}`
+                    });
+                } else {
+                    eventEmitter.emit(EVENTS.COMPETITION_WON,{ 
+                            username: competition.challenged, 
+                            payload:  competition.challenger,
+                            extra: `${competition.challenged_points}-${competition.challenger_points}`
+                        });
+                    eventEmitter.emit(EVENTS.COMPETITION_LOST, { 
+                            username: competition.challenger, 
+                            payload:  competition.challenged,
+                            extra: `${competition.challenger_points}-${competition.challenged_points}`
+                        });
+                }
+            }    
 
             return res.status(200).send({
                 success: true,

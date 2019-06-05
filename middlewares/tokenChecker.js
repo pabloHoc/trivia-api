@@ -22,7 +22,7 @@ const tokenChecker = (req, res, next) => {
                 message: "Token inválido"
             });
         } else {
-            req.username = decoded.username;
+            req.body.username = decoded.username;
             next();
         }
     });

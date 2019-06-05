@@ -1,14 +1,20 @@
 /**
  * TODO: 
- *  * Agregar validacion JWT
- *  * Si esta expirado pero es valido, devolver uno nuevo
- *  * En el token tiene que estar el username
- *  * Middleware que chequee que haya token
- *  * Middleware que ponga el username en el body de la request
+ *  ! NOTIFICACIONES SIGUIENDO Y SIGUIENDO EN PERFIL Y NUEVO DESAFIO
+ *  ! COMPETICIONES GANADAS
+ *  ! NIVELES
  * 
  *  * Evitar preguntas repetidas respondidas correctamente
+ *  * Evitar desafíos random ya completados
+ *  * Agregar cantidad de veces jugadas a desafíos
  *  * Impedir votos dobles
- *  
+ *  * Categorias por puntaje de preguntas
+ *  ! Sanear queries
+ *  * Revisar validaciones faltantes
+ *  ? Optimizar posibles queries en asíncrono
+ *  ? Chequear discrepancias uso id, ObjectId y username
+ * 
+ *  * Hacer modulo router de versiones
  */
 
 const 
@@ -16,10 +22,7 @@ const
     bodyParser = require('body-parser'),
     server = express(),
     cors = require('cors'),
-    dotenv = require('dotenv')
     routes = require('./routes');
-
-dotenv.config();
 
 const { port } = require('./configs/config');
 

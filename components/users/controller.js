@@ -1,15 +1,17 @@
-const jwt = require('jsonwebtoken');
-const { SECRET } = require('./../../configs/config');
-const db = require('./../../db/db');
-const COLLECTIONS = require('./../../db/collections');
-const bcrypt = require('bcrypt');
+const 
+    jwt = require('jsonwebtoken'),
+    { secret } = require('./../../configs/config'),
+    db = require('./../../db/db'),
+    COLLECTIONS = require('./../../db/collections'),
+    bcrypt = require('bcrypt'),
+    eventEmitter = require('./../notifications/emitter'),
+    EVENTS = require('./../notifications/events');
 
 class Controller {
     static async getUser(username) {
         try {
-            let userFound;
-            let collection = await db.getCollection(COLLECTIONS.USERS)
-            userFound = await collection.findOne({ username: username });
+            const collection = await db.getCollection(COLLECTIONS.USERS)
+            const userFound = await collection.findOne({ username: username });
             return userFound;
         } catch(error) {
             console.log(error);
@@ -19,16 +21,14 @@ class Controller {
     static async signIn(req, res) {
         const { username, password } = req.body;
 
-        let user = await Controller.getUser(username);
-
-        if (user) {
-            throw new Error('Nombre de usuario ya se encuentra en uso');
-        }
-
         try {
-            let collection = await db.getCollection(COLLECTIONS.USERS);
-            
-            let hash = await bcrypt.hash(password, 10);
+            const user = await Controller.getUser(username);
+
+            if (user) 
+                throw new Error('Nombre de usuarix ya se encuentra en uso');
+
+            const collection = await db.getCollection(COLLECTIONS.USERS);
+            const hash = await bcrypt.hash(password, 10);
 
             collection.insertOne({
                 username: username,
@@ -37,7 +37,7 @@ class Controller {
 
             return res.status(200).send({
                 success: true,
-                message: 'Usuario creado exitosamente'
+                message: 'Usuarix creado exitosamente'
             });
         } catch(error) {
             return res.status(400).send({
@@ -51,19 +51,17 @@ class Controller {
         const { username, password } = req.body;
 
         try {
-            let user = await Controller.getUser(username);
+            const user = await Controller.getUser(username);
 
-            if (!user) {
-                throw new Error('Usuario o contraseña incorrectos');
-            }
+            if (!user) 
+                throw new Error('Usuarix o contraseña incorrectos');
     
-            let match = await bcrypt.compare(password, user.password);
+            const match = await bcrypt.compare(password, user.password);
     
             if (match) {
-                let token = jwt.sign(
+                const token = jwt.sign(
                     { username: username },
-                    SECRET,
-                    { expiresIn: '24h' }
+                    secret
                 )
         
                 return res.status(200).send({
@@ -72,7 +70,7 @@ class Controller {
                     token: token
                 });
             } else {
-                throw new Error('Usuario o contraseña incorrectos');
+                throw new Error('Usuarix o contraseña incorrectos');
             }
         } catch (error) {
             return res.status(400).send({
@@ -87,23 +85,79 @@ class Controller {
 
         try {
             const collection = await db.getCollection(COLLECTIONS.USERS);
-            const user = await collection
-                                .findOne(
-                                    { username: username }, 
-                                    { 
-                                        fields: { 
-                                            username: 1,
-                                            following: 1 
-                                        } 
-                                    });
+            const [ user ] = await collection.aggregate([
+                    { $match: { username: username }},
+                    { $project: { 
+                        username: 1,
+                        answered: { $cond: { if: { $isArray: '$answered' }, then: { $size: '$answered' }, else: 0} }
+                    }}]).toArray()
 
-            if (!user) {
-                throw new Error('Usuario inexistente');
-            }
+            if (!user) 
+                throw new Error('Usuarix inexistente');
     
             return res.status(200).send({
                 success: true,
                 user: user
+            });
+
+        } catch (error) {
+            return res.status(400).send({
+                success: false,
+                message: error.message
+            });
+        }
+    }
+
+    static async getAll(req, res) {
+        const { sort = 'answers', page = 0 } = req.params;
+        const aggregation = []
+        
+        switch (sort) {
+            case 'answers':
+                aggregation.push({ 
+                    $project: { 
+                        username: 1,
+                        answered: { $cond: { if: { $isArray: '$answered' }, then: { $size: '$answered' }, else: 0} }
+                    } 
+                });
+                break;
+            default:
+                aggregation.push(
+                    { $unwind: '$answered' }, 
+                    { $lookup: {
+                        from: 'questions',
+                        localField: 'answered',
+                        foreignField: '_id',
+                        as: 'answered',
+                    }}, 
+                    { $unwind: '$answered' }, 
+                    { $lookup: {
+                        from: 'categories',
+                        localField: 'answered.category',
+                        foreignField: '_id',
+                        as: 'category',
+                    }}, 
+                    { $match: { 'category.name': sort }}, 
+                    { $unwind: '$category' }, 
+                    { $group: {
+                        _id: '$_id',
+                        username: {$first: '$username'},
+                        answered: { $sum : 1 },
+                    }                        
+                });
+                break;
+        }
+
+        aggregation.push({ $sort: { answered: -1 } });
+        aggregation.push({ $skip: page * 10 }, { $limit: 10 });
+
+        try {
+            const collection = await db.getCollection(COLLECTIONS.USERS);
+            const user = await collection.aggregate(aggregation).toArray();
+    
+            return res.status(200).send({
+                success: true,
+                result: user
             });
 
         } catch (error) {
@@ -119,16 +173,19 @@ class Controller {
         const { following } = req.params;
 
         try {
+            if (username === following) 
+                throw new Error('No puedes seguirte a ti mismo!')
+
             const collection = await db.getCollection(COLLECTIONS.USERS);
-            const user = await collection.updateOne({ username: username }, {
-                $push: {
-                    following: following
-                }
+            const user = await collection.updateOne(
+                { username: username }, 
+                { $addToSet: { following: following }
             });
 
-            if (!user) {
-                throw new Error('Usuario inexistente');
-            }
+            if (!user) 
+                throw new Error('Usuarix inexistente');
+
+            eventEmitter.emit(EVENTS.NEW_FOLLOWER, { username: following, payload: username });    
     
             return res.status(200).send({
                 success: true,
@@ -149,14 +206,12 @@ class Controller {
 
         try {
             const collection = await db.getCollection(COLLECTIONS.USERS);
-            const user = await collection.updateOne({ username: username }, {
-                $pull: {
-                    following: following
-                }
-            });
+            const user = await collection.updateOne(
+                { username: username }, 
+                { $pull: { following: following } });
 
             if (!user) {
-                throw new Error('Usuario inexistente');
+                throw new Error('Usuarix inexistente');
             }
     
             return res.status(200).send({

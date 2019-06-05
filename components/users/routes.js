@@ -1,9 +1,11 @@
-const controller = require('./controller');
-const express = require('express');
-const router = express.Router();
-const validator = require('./validator');
-const checkValidationResult = require('./../../middlewares/checkValidationResult');
+const 
+    controller = require('./controller'),
+    express = require('express'),
+    router = express.Router(),
+    validator = require('./validator'),
+    checkValidationResult = require('./../../middlewares/checkValidationResult');
 
+router.get('/all/:sort/:page?', controller.getAll);
 router.get('/:username', controller.getByUsername);
 
 router.post('/signin', validator('login'), checkValidationResult, controller.signIn);

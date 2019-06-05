@@ -1,5 +1,6 @@
-const mongo = require('mongodb').MongoClient;
-const { url, db } = require('./../configs/db');
+const 
+  mongo = require('mongodb').MongoClient,
+  { url, db } = require('../configs/db');
 
 let connection;
 
@@ -13,7 +14,7 @@ class Db {
         connection = client.db(db);
         return connection;
       } catch(error) {
-        console.log(error);
+        throw error;
       }
     }
   }

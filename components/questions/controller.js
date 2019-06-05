@@ -1,13 +1,7 @@
-const db = require('./../../db/db');
-const COLLECTIONS = require('./../../db/collections');
-const ObjectId = require('mongodb').ObjectId;
-
-/**
- * TODO:
- *  * agregar metodo votacion
- *  * chequear los sort
- *  * agregar metodo busqueda
- */
+const 
+    db = require('./../../db/db'),
+    COLLECTIONS = require('./../../db/collections'),
+    ObjectId = require('mongodb').ObjectId;
 
 class Controller {
     static async add(req, res) {
@@ -45,14 +39,14 @@ class Controller {
             [user, category] = await Promise.all([findUser(username), findCategory(category)]);
 
             if (!user)
-                throw new Error("Usuarix inexistente");    
+                throw new Error('Usuarix inexistente');    
                 
             if (!category)
-                throw new Error("Categoria inexistente");                
+                throw new Error('Categoría inexistente');                
 
-            let collection = await db.getCollection(COLLECTIONS.QUESTIONS);
+            const collection = await db.getCollection(COLLECTIONS.QUESTIONS);
 
-            let result = await collection.insertOne({
+            const result = await collection.insertOne({
                 user: user._id,
                 question: question,
                 answer: answer,
@@ -64,7 +58,7 @@ class Controller {
 
             res.status(200).send({
                 success: true,
-                message: "Pregunta añadida con éxito",
+                message: 'Pregunta añadida con éxito',
                 question_id: result.insertedId
             });
         } catch (error) {
@@ -83,11 +77,7 @@ class Controller {
             const collection = await db.getCollection(COLLECTIONS.QUESTIONS);
             
             let aggregation = Controller.getLookup();
-            aggregation.unshift({
-                $match: {
-                    _id: ObjectId(id)
-                }
-            }) 
+            aggregation.unshift({ $match: { _id: ObjectId(id) } }) 
             
             const result = await collection
                                     .aggregate(aggregation)
@@ -102,14 +92,13 @@ class Controller {
             } else {
                 res.status(400).send({
                     success: false,
-                    message: "Pregunta no existente"
+                    message: 'Pregunta no existente'
                 });
-
             }
         } catch (error) {
             res.status(400).send({
                 success: false,
-                message: "Error al obtener preguntas",
+                message: 'Error al obtener preguntas',
                 message: error.message,
                 trace: error.stack
             });
@@ -120,17 +109,12 @@ class Controller {
         try {
             const collection = await db.getCollection(COLLECTIONS.QUESTIONS);
             
-            let aggregation = Controller.getLookup();
-            aggregation.unshift({
-                $sample: {
-                    size: 10
-                }
-            }) 
+            const aggregation = Controller.getLookup();
+            aggregation.unshift({ $sample: {size: 10} }) 
 
             let results = await collection
                                 .aggregate(aggregation)
                                 .toArray();
-            console.log(results);
 
             results = await Controller.normalizeRandom(results, collection, aggregation);
 
@@ -143,7 +127,7 @@ class Controller {
             console.log(error)
             res.status(400).send({
                 success: false,
-                message: "Error al obtener preguntas",
+                message: 'Error al obtener preguntas',
                 message: error.message,
                 trace: error.stack
             });
@@ -168,20 +152,11 @@ class Controller {
                 throw new Error('No hay suficientes preguntas en dicha categoría');
 
             let aggregation = Controller.getLookup();
-            aggregation.unshift({
-                    $sample: {
-                        size: 10
-                    }
-                }, {
-                $match: {
-                    category: category._id
-                }
-            }); 
+            aggregation.unshift({ $sample: { size: 10 } }, { $match: { category: category._id } }); 
 
             let results = await collection
                                 .aggregate(aggregation)
                                 .toArray();
-            console.log(results);
 
             results = await Controller.normalizeRandom(results, collection, aggregation);
 
@@ -194,7 +169,7 @@ class Controller {
             console.log(error)
             res.status(400).send({
                 success: false,
-                message: "Error al obtener preguntas",
+                message: 'Error al obtener preguntas',
                 message: error.message,
                 trace: error.stack
             });
@@ -209,17 +184,16 @@ class Controller {
 
         while(results.length !== 10) {
             if (results.length < 10) {
-                aggregation.push({
-                    $limit: 1
-                });
+                aggregation.push({ $limit: 1 });
                 const result = await collection
                                         .aggregate(aggregation)
                                         .toArray();
-                console.log(ids, result[0]._id.toString(), ids.includes(result[0]._id.toString()));                                        
+
                 if (!ids.includes(result[0]._id.toString())) {
                     results.push(result[0]);
                     ids.push(result[0]._id.toString());
-                }                                      
+                }                   
+
             } else if (results.length > 10) {
                 results.pop();
             }
@@ -243,7 +217,7 @@ class Controller {
                 sort = { likes: 1 }
         }
 
-        let aggregation = Controller.getLookup();
+        const aggregation = Controller.getLookup();
         aggregation.push({$sort: sort}, { $skip: page * 10 }, { $limit: 10 });
 
         try {
@@ -258,10 +232,72 @@ class Controller {
             });
 
         } catch (error) {
-            console.log(error)
             res.status(400).send({
                 success: false,
-                message: "Error al obtener preguntas",
+                message: 'Error al obtener preguntas',
+                message: error.message,
+                trace: error.stack
+            });
+        }
+    }
+
+    static async answer(req, res) {
+        const { id } = req.params;
+        const { username, answer } = req.body;
+
+        try {
+            const findQuestion = (id) => { return new Promise(async (resolve, reject) => {
+                const collection = await db.getCollection(COLLECTIONS.QUESTIONS);
+                const question = await collection.findOne({ _id: ObjectId(id) });
+
+                if (question)
+                    resolve(question);
+                else
+                    reject(new Error('Pregunta no encontrada'));                    
+                })
+            };    
+
+            const findUser = (username) => { return new Promise(async (resolve, reject) => {
+                const collection = await db.getCollection(COLLECTIONS.USERS);
+                const user = await collection.findOne({ username: username });
+              
+                if (user)
+                    resolve(user);
+                else
+                    reject(new Error('Usuarix no encontradx'));                    
+                })
+            };                
+
+            const [user, question] = await Promise.all([findUser(username), findQuestion(id)]);
+
+            if (!user)
+                throw new Error('Usuarix inexistente');    
+                
+            if (!question)
+                throw new Error('Pregunta inexistente');   
+
+            if (question.answer !== answer) {
+                res.status(200).send({
+                    success: true,
+                    answered: false,
+                    message: 'Respuesta incorrecta'
+                });
+            } else {
+                const collection = await db.getCollection(COLLECTIONS.USERS);
+                await collection.update({ username: username }, {
+                    $addToSet: { answered: question._id }
+                });
+
+                res.status(200).send({
+                    success: true,
+                    answered: true,
+                    message: 'Respuesta correcta'
+                });
+            }
+        } catch (error) {
+            res.status(400).send({
+                success: false,
+                message: 'Error al obtener preguntas',
                 message: error.message,
                 trace: error.stack
             });
@@ -271,7 +307,7 @@ class Controller {
     static async search(req, res) {
         const { query, page = 0 } = req.params;
         
-        let aggregation = Controller.getLookup();
+        const aggregation = Controller.getLookup();
         aggregation.unshift({ $match: { question: {'$regex' : query, $options: 'i' }}});
         aggregation.push({ $skip: page * 10 }, { $limit: 10 });
 
@@ -287,10 +323,9 @@ class Controller {
             });
 
         } catch (error) {
-            console.log(error)
             res.status(400).send({
                 success: false,
-                message: "Error al obtener preguntas",
+                message: 'Error al obtener preguntas',
                 message: error.message,
                 trace: error.stack
             });
@@ -316,16 +351,12 @@ class Controller {
             category = await collection.findOne({ name: category });
 
             if (!category)
-                throw new Error("Categoria inexistente");
+                throw new Error('Categoria inexistente');
 
             collection = await db.getCollection(COLLECTIONS.QUESTIONS);
 
             const aggregation = Controller.getLookup();
-            aggregation.unshift({ 
-                $match: {
-                    category: category._id
-                }
-            });
+            aggregation.unshift({ $match: { category: category._id } });
             aggregation.push({$sort: sort}, { $skip: page * 10 }, { $limit: 10 });
 
             let result = await collection
@@ -339,7 +370,7 @@ class Controller {
         } catch (error) {
             res.status(400).send({
                 success: false,
-                message: "Error al obtener preguntas",
+                message: 'Error al obtener preguntas',
                 message: error.message,
                 trace: error.stack
             });
@@ -366,14 +397,10 @@ class Controller {
             let user = await collection.findOne({ username: username });
 
             if (!user)
-                throw new Error("Usuarix inexistente");
+                throw new Error('Usuarix inexistente');
 
             const aggregation = Controller.getLookup();
-            aggregation.unshift({
-                $match: {
-                    user: user._id
-                }
-            });
+            aggregation.unshift({ $match: { user: user._id } });
             aggregation.push({$sort: sort}, { $skip: page * 10 }, { $limit: 10 });
 
             collection = await db.getCollection(COLLECTIONS.QUESTIONS);
@@ -393,7 +420,7 @@ class Controller {
         } catch (error) {
             res.status(400).send({
                 success: false,
-                message: "Error al obtener preguntas",
+                message: 'Error al obtener preguntas',
                 message: error.message,
                 trace: error.stack
             });
@@ -410,17 +437,11 @@ class Controller {
 
     static async vote(req, res, vote) {
         const { id } = req.params;
+        
         try {
             const collection = await db.getCollection(COLLECTIONS.QUESTIONS);
             
-            await collection.updateOne(
-                { 
-                    _id: ObjectId(id) 
-                }, {
-                    $inc: {
-                        likes: vote
-                    }
-                });
+            await collection.updateOne({ _id: ObjectId(id) }, { $inc: { likes: vote } });
 
             res.status(200).send({
                 success: true
@@ -429,7 +450,7 @@ class Controller {
         } catch(error) {
             res.status(400).send({
                 success: false,
-                message: "Error al votar pregunta",
+                message: 'Error al votar pregunta',
                 message: error.message,
                 trace: error.stack
             });
@@ -438,44 +459,34 @@ class Controller {
 
     static getLookup() {
         return [
-            {
-                $lookup: {
-                    from: 'categories',
-                    localField: 'category',
-                    foreignField: '_id',
-                    as: 'category',
+            { $lookup: {
+                from: 'categories',
+                localField: 'category',
+                foreignField: '_id',
+                as: 'category',
+            }}, 
+            { $lookup: {
+                from: 'users',
+                localField: 'user',
+                foreignField: '_id',
+                as: 'user',
+            }}, 
+            { $unwind: '$category' },
+            { $unwind: '$user' },
+            { $group: {
+                _id: '$_id',
+                username: {$first: '$user.username'},
+                question: {$first: '$question'},
+                date: {$first: '$date'},
+                answer: {$first: '$answer'},
+                answers: {$first: '$answers'},
+                category: { 
+                    $first: {
+                        name: '$category.name',
+                        color: '$category.color'  
+                    } 
                 }
-            }, 
-            {
-                $lookup: {
-                    from: 'users',
-                    localField: 'user',
-                    foreignField: '_id',
-                    as: 'user',
-                }
-            }, 
-            {
-                $unwind: '$category'
-            },
-            {
-                $unwind: '$user'
-            },
-            { 
-                $group: {
-                    _id: '$_id',
-                    username: {$first: '$user.username'},
-                    question: {$first: '$question'},
-                    date: {$first: '$date'},
-                    answer: {$first: '$answer'},
-                    answers: {$first: '$answers'},
-                    category: { 
-                        $first: {
-                            name: '$category.name',
-                            color: '$category.color'  
-                        } 
-                    }
-                }                        
-            }
+            }}
         ];
     }
 }

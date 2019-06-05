@@ -8,10 +8,10 @@
 
         * Login/Register
             - validarInputs [return]
-            - chequearUsuario [return]
+            - chequearUsuarix [return]
             - chequarLogin [return]
-            - registrarUsuario
-            - loguearUsuario
+            - registrarUsuarix
+            - loguearUsuarix
         * Home
             - obtenerDatosPerfil [return][objeto] 
             - mostrarDatosPerfil [DOM]
@@ -59,10 +59,10 @@
             - calificarDesafio
             - completarCompetencia
         * Rankings
-            - obtenerUsuarios (filtro, pagina) [return][array/objeto]
+            - obtenerUsuarixs (filtro, pagina) [return][array/objeto]
             - obtenerDesafios (filtro, pagina) [return][array/objeto]
             - obtenerCategorias (filtro, pagina) [return][array/objeto]
-            - mostrarUsuarios [DOM]
+            - mostrarUsuarixs [DOM]
             - mostrarDesafios [DOM]
             - mostrarCategorias [DOM]
         * Notificaciones         
@@ -75,7 +75,7 @@
         - Desafíos
         - Notificaciones
         - Siguiendo / Le siguen
-        - Usuarios (rankings)
+        - Usuarixs (rankings)
 
     * Objetos
         - Usuarix

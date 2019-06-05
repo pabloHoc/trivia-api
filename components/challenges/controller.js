@@ -1,18 +1,24 @@
-const db = require('./../../db/db');
-const COLLECTIONS = require('./../../db/collections');
-const ObjectId = require('mongodb').ObjectId;
+const 
+    db = require('./../../db/db'),
+    COLLECTIONS = require('./../../db/collections'),
+    ObjectId = require('mongodb').ObjectId,
+    eventEmitter = require('./../notifications/emitter'),
+    EVENTS = require('./../notifications/events');
 
 class Controller {
     static async add(req, res) {
         try {
-            let { title, description, questions } = req.body;
+            let { username, title, description, questions } = req.body;
 
-            // !!! Sacar esta mierda de aca
-            let user = ObjectId("5ceefe4439bc8a4438d37426")
+            let collection = await db.getCollection(COLLECTIONS.USERS);
+            const user = await collection.findOne({ username: username });
+            
+            if (!user) 
+                throw new Error('Usuarix no encontradx');
 
             questions = questions.map(id => { return ObjectId(id) })
 
-            const collection = await db.getCollection(COLLECTIONS.CHALLENGES);
+            collection = await db.getCollection(COLLECTIONS.CHALLENGES);
             await collection.insertOne({
                 user: user,
                 title: title,
@@ -25,14 +31,14 @@ class Controller {
 
             res.status(200).send({
                 success: true,
-                message: "Desafío agregado con éxito"
+                message: 'Desafío agregado con éxito'
             });
         } catch (error) {
             res.status(400).send({
                 success: false,
-                message: "Error al agregar desafío",
+                message: 'Error al agregar desafío',
                 error: error.message,
-                stack: error.stack
+                trace: error.stack
             });
         }
     }
@@ -43,13 +49,8 @@ class Controller {
         try {
             const collection = await db.getCollection(COLLECTIONS.CHALLENGES);
 
-            let aggregation = Controller.getLookup();
-            aggregation.unshift({
-                $match: {
-                    _id: ObjectId(id)
-                }
-            })
-
+            const aggregation = Controller.getLookup();
+            aggregation.unshift({ $match: { _id: ObjectId(id) } })
 
             const result = await collection.aggregate(aggregation).toArray();
 
@@ -61,28 +62,24 @@ class Controller {
             } else {
                 res.status(400).send({
                     success: false,
-                    message: "Desafío no existente"
+                    message: 'Desafío no existente'
                 });
-
             }
         } catch (error) {
             res.status(400).send({
                 success: false,
-                message: "Error al obtener preguntas",
-                error: error
+                message: 'Error al obtener preguntas',
+                error: error,
+                trace: error.stack
             });
         }
     }
-
-    /**
-     * TODO: Chequear que no sea del mismo usuario y que ya no haya sido jugado
-     */
 
     static async getRandom(req, res) {
         try {
             const collection = await db.getCollection(COLLECTIONS.CHALLENGES);
 
-            let aggregation = Controller.getLookup();
+            const aggregation = Controller.getLookup();
             aggregation.unshift({ $sample: { size: 1 } });
 
             const result = await collection.aggregate(aggregation).toArray();
@@ -95,15 +92,15 @@ class Controller {
             } else {
                 res.status(400).send({
                     success: false,
-                    message: "Desafío no existente"
+                    message: 'Desafío no existente'
                 });
-
             }
         } catch (error) {
             res.status(400).send({
                 success: false,
-                message: "Error al obtener preguntas",
-                error: error
+                message: 'Error al obtener preguntas',
+                error: error,
+                trace: error.stack
             });
         }
     }
@@ -147,8 +144,9 @@ class Controller {
         } catch (error) {
             res.status(400).send({
                 success: false,
-                message: "Error al obtener preguntas",
-                error: error
+                message: 'Error al obtener preguntas',
+                error: error,
+                trace: error.stack
             });
         }
     }
@@ -173,10 +171,10 @@ class Controller {
 
         try {
             let collection = await db.getCollection(COLLECTIONS.USERS);
-            let user = await collection.findOne({ username: username });
+            const user = await collection.findOne({ username: username });
 
             if (!user) 
-                throw new Error('Usuario no encontrado');
+                throw new Error('Usuarix no encontradx');
 
             collection = await db.getCollection(COLLECTIONS.CHALLENGES);
 
@@ -199,13 +197,12 @@ class Controller {
         } catch (error) {
             res.status(400).send({
                 success: false,
-                message: "Error al obtener desafíos",
+                message: 'Error al obtener desafíos',
                 error: error.message,
-                trace: error.trace
+                trace: error.stack
             });
         }
     }
-
     
     static async search(req, res) {
         const { query, page = 0 } = req.params;
@@ -213,19 +210,19 @@ class Controller {
         try {
             const collection = await db.getCollection(COLLECTIONS.CHALLENGES);
             const result = await collection
-                                .find({
-                                $or: [
-                                    { title: {'$regex' : query, $options: 'i' }},
-                                    { description: {'$regex' : query, $options: 'i' }},
-                                ]})
-                                .project({
-                                    title: 1,
-                                    description: 1,
-                                    likes: 1                    
-                                })
-                                .limit(10)
-                                .skip(page * 10)
-                                .toArray();
+                .find({
+                $or: [
+                    { title: {'$regex' : query, $options: 'i' }},
+                    { description: {'$regex' : query, $options: 'i' }},
+                ]})
+                .project({
+                    title: 1,
+                    description: 1,
+                    likes: 1                    
+                })
+                .limit(10)
+                .skip(page * 10)
+                .toArray();
 
             res.status(200).send({
                 success: true,
@@ -235,7 +232,7 @@ class Controller {
         } catch (error) {
             res.status(400).send({
                 success: false,
-                message: "Error al obtener desafíos",
+                message: 'Error al obtener desafíos',
                 message: error.message,
                 trace: error.stack
             });
@@ -255,14 +252,7 @@ class Controller {
         try {
             const collection = await db.getCollection(COLLECTIONS.CHALLENGES);
             
-            await collection.updateOne(
-                { 
-                    _id: ObjectId(id) 
-                }, {
-                    $inc: {
-                        likes: vote
-                    }
-                });
+            await collection.updateOne({ _id: ObjectId(id) }, { $inc: { likes: vote } });
 
             res.status(200).send({
                 success: true
@@ -271,7 +261,7 @@ class Controller {
         } catch(error) {
             res.status(400).send({
                 success: false,
-                message: "Error al votar pregunta",
+                message: 'Error al votar pregunta',
                 message: error.message,
                 trace: error.stack
             });
@@ -280,41 +270,34 @@ class Controller {
     
     static getLookup() {
         return [
-            {
-                $lookup: {
-                    from: 'users',
-                    localField: 'user',
-                    foreignField: '_id',
-                    as: 'user',
-                }
-            },  {
-                $lookup: {
-                    from: 'questions',
-                    localField: 'questions',
-                    foreignField: '_id',
-                    as: 'questions',
-                }
-            }, {
-                $unwind: '$user'
-            }, {
-                $unwind: '$questions'
-            }, {
-                $lookup: {
-                    from: 'categories',
-                    localField: 'questions.category',
-                    foreignField: '_id',
-                    as: 'questions.category',
-                }
-            }, {
-                $group: {
-                    _id: '$_id',
-                    title: { $first :'$title' },
-                    description: { $first :'$description' },
-                    username: { $first :'$user.username' },
-                    questions: { $push: '$questions'},
-                    likes: {$first: '$likes'}
-                }
-            },
+            { $lookup: {
+                from: 'users',
+                localField: 'user',
+                foreignField: '_id',
+                as: 'user',
+            }},  
+            { $lookup: {
+                from: 'questions',
+                localField: 'questions',
+                foreignField: '_id',
+                as: 'questions',
+            }}, 
+            { $unwind: '$user' }, 
+            { $unwind: '$questions' }, 
+            { $lookup: {
+                from: 'categories',
+                localField: 'questions.category',
+                foreignField: '_id',
+                as: 'questions.category',
+            }}, 
+            { $group: {
+                _id: '$_id',
+                title: { $first :'$title' },
+                description: { $first :'$description' },
+                username: { $first :'$user.username' },
+                questions: { $push: '$questions'},
+                likes: {$first: '$likes'}
+            }},
         ];
     }
 }
