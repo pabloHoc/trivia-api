@@ -1,0 +1,12 @@
+{
+    "name": "Preguntadas",
+    "version": "1.0.0",
+    "description": "API para el proyecto de preguntas y respuestas de la 7ma Gen Ada",
+    "apidoc": {
+      "title": "Preguntadas API",
+      "url" : "https://preguntadas.herokuapp.com/"
+    },
+    "template": {
+        "forceLanguage": "es"
+    }
+}

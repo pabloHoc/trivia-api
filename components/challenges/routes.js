@@ -5,10 +5,10 @@ const
     checkValidationResult = require('./../../middlewares/checkValidationResult');
 
 router.get('/all/:sort?/:page?', controller.getAll);
-router.get('/find/:id', validator('getChallenge'), checkValidationResult, controller.get);
 router.get('/getrandom', controller.getRandom);
 router.get('/byuser/:username/:sort?/:page?', validator('getByUsername'), checkValidationResult, controller.getByUsername);
 router.get('/search/:query/:page?', controller.search);
+router.get('/:id', validator('getChallenge'), checkValidationResult, controller.get);
 
 router.post('/upvote/:id', controller.upvote);
 router.post('/downvote/:id', controller.downvote);

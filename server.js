@@ -26,6 +26,7 @@ const
 
 const { port } = require('./configs/config');
 
+server.use(express.static('apidocs'));
 server.use(cors());
 server.options('*', cors());
 

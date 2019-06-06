@@ -1,4 +1,5 @@
 const 
+    path = require('path'),
     questionsRoutes = require('./components/questions/routes'),
     challengesRoutes = require('./components/challenges/routes'),
     competitionsRoutes = require('./components/competitions/routes'),
@@ -9,6 +10,9 @@ const
     tokenCheker = require('./middlewares/tokenChecker');
 
 const init = server => {
+    server.get('/apidocs', (req, res) => {
+        return res.sendFile(path.join(__dirname + '/apidocs/index.html'));
+    });
     server.use('/v1/users', usersRoutes);
 
     server.use(tokenCheker);

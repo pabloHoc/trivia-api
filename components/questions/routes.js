@@ -11,10 +11,10 @@ router.get('/random/:category', controller.getRandomByCategory);
 router.get('/bycategory/:category/:sort?/:page?', validator('getByCategory'), checkValidationResult, controller.getAllByCategory);
 router.get('/byuser/:username/:sort?/:page?', validator('getByUsername'), checkValidationResult, controller.getByUsername);
 
-router.get('/find/:id', validator('getQuestion'), checkValidationResult, controller.get);
 router.get('/search/:query/:page?', controller.search);
+router.get('/:id', validator('getQuestion'), checkValidationResult, controller.get);
 
-router.post('/answer/:id', controller.answer);
+router.post('/answer/:id', validator('answer'), checkValidationResult, controller.answerMany);
 router.post('/upvote/:id', controller.upvote);
 router.post('/downvote/:id', controller.downvote);
 router.post('/', validator('addQuestion'), checkValidationResult, controller.add);

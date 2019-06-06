@@ -7,12 +7,12 @@ module.exports = method => {
     switch(method) {
         case 'addQuestion':
             return [
-                check('question', MSGS.REQUIRED).exists(),
+                check('title', MSGS.REQUIRED).exists(),
                 check('answer', MSGS.REQUIRED).exists(),
                 check('answers', MSGS.REQUIRED).exists(),
                 check('category', MSGS.REQUIRED).exists(),
 
-                check('question', MSGS.STRING_REQUIRED).isString(),
+                check('title', MSGS.STRING_REQUIRED).isString(),
                 check('answer', MSGS.NUMBER_REQUIRED).isNumeric(),
                 check('answers', MSGS.ARRAY_REQUIRED).isArray(),
                 check('answers').custom(answers => validators.minItems(answers, 3)),
@@ -29,6 +29,11 @@ module.exports = method => {
         case 'getByUsername':
             return [
                 check('username', MSGS.REQUIRED).exists(),
+            ]       
+        case 'answer':
+            return [
+                check('questions', MSGS.REQUIRED).exists(),
+                check('questions', MSGS.ARRAY_REQUIRED).isArray(),
             ]                  
         default:
             return [];            
