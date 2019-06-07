@@ -2,8 +2,8 @@ const
     db = require('./../../db/db'),
     COLLECTIONS = require('./../../db/collections'),
     ObjectId = require('mongodb').ObjectId,
-    eventEmitter = require('./../notifications/emitter'),
-    EVENTS = require('./../notifications/events');
+    eventEmitter = require('./../emitter'),
+    EVENTS = require('../events');
 
 class Controller {
     /**
@@ -288,7 +288,7 @@ class Controller {
      */
     static async play(req, res) {
         const { username } = req.body;
-        const { id, points } = req.params;
+        let { id, points } = req.params;
 
         try {
             if (points > 10)
@@ -304,7 +304,7 @@ class Controller {
                 throw new Error('Usuarix no pertenece a competición');
                 
             if ((competition.challenger === username && competition.challenger_finished) ||
-                (competition.challeged === username && competition.challenged_finished))
+                (competition.challenged === username && competition.challenged_finished))
                 throw new Error('Usuarix ya ha jugado');            
 
             let update = {};

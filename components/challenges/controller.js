@@ -2,8 +2,8 @@ const
     db = require('./../../db/db'),
     COLLECTIONS = require('./../../db/collections'),
     ObjectId = require('mongodb').ObjectId,
-    eventEmitter = require('./../notifications/emitter'),
-    EVENTS = require('./../notifications/events');
+    eventEmitter = require('./../emitter'),
+    EVENTS = require('../events');
 
 /**
 * @apiDefine ChallengeResult

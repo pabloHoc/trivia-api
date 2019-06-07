@@ -22,6 +22,34 @@
     "type": "",
     "url": "",
     "version": "0.0.0",
+    "filename": "../trivia-test/apidoc/main.js",
+    "group": "C__Users_HP_Documents_Clases_Codigo_Ada_trivia_test_apidoc_main_js",
+    "groupTitle": "C__Users_HP_Documents_Clases_Codigo_Ada_trivia_test_apidoc_main_js",
+    "name": ""
+  },
+  {
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "optional": false,
+            "field": "varname1",
+            "description": "<p>No type.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "varname2",
+            "description": "<p>With type.</p>"
+          }
+        ]
+      }
+    },
+    "type": "",
+    "url": "",
+    "version": "0.0.0",
     "filename": "../trivia-test/apidocs/main.js",
     "group": "C__Users_HP_Documents_Clases_Codigo_Ada_trivia_test_apidocs_main_js",
     "groupTitle": "C__Users_HP_Documents_Clases_Codigo_Ada_trivia_test_apidocs_main_js",
@@ -3066,6 +3094,27 @@
             "group": "200 (OK)",
             "type": "Number",
             "optional": false,
+            "field": "user.competitions_won",
+            "description": "<p>Cantidad de competiciones ganadas</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "String[]",
+            "optional": false,
+            "field": "user.following",
+            "description": "<p>Lista de usuarixs que sigue</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "String[]",
+            "optional": false,
+            "field": "user.followers",
+            "description": "<p>Lista de usuarixs que le siguen</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "Number",
+            "optional": false,
             "field": "user.answered",
             "description": "<p>Puntaje de usuarix (cantidad de preguntas respondidas)</p>"
           }
@@ -3074,7 +3123,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "{\n   \"success\": true,\n   \"user\": {\n       \"_id\": \"5ceefe4439bc8a4438d37426\",\n       \"username\": \"ada\",\n       \"answered\": 234\n   }     \n}",
+          "content": "{\n   \"success\": true,\n   \"user\": {\n       \"_id\": \"5ceefe4439bc8a4438d37426\",\n       \"username\": \"ada\",\n       \"competitions_won\": 3,\n       \"following\": [\n          \"random_citizen\"   \n       ],\n       \"followers\": [\n          \"random_citizen\"\n       ]\n       \"answered\": 234\n   }     \n}",
           "type": "type"
         }
       ]

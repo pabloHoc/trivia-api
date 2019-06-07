@@ -1,4 +1,4 @@
-const EVENTS = require('./events');
+const EVENTS = require('../events');
 
 module.exports.getMessage = (event, data) => {
     const { payload, extra = '' } = data;

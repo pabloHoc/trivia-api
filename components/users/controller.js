@@ -4,8 +4,8 @@ const
     db = require('./../../db/db'),
     COLLECTIONS = require('./../../db/collections'),
     bcrypt = require('bcrypt'),
-    eventEmitter = require('./../notifications/emitter'),
-    EVENTS = require('./../notifications/events');
+    eventEmitter = require('./../emitter'),
+    EVENTS = require('../events');
 
 class Controller {
     
@@ -77,7 +77,10 @@ class Controller {
 
             collection.insertOne({
                 username: username,
-                password: hash
+                password: hash,
+                following: [],
+                answered: 0,
+                competitions_won: 0
             });
 
             return res.status(200).send({
@@ -198,6 +201,9 @@ class Controller {
     * @apiSuccess (200 (OK)) {Object} user Info de perfil de usuarix
     * @apiSuccess (200 (OK)) {String} user._id Id de usuarix
     * @apiSuccess (200 (OK)) {String} user.username Nombre de usuarix
+    * @apiSuccess (200 (OK)) {Number} user.competitions_won Cantidad de competiciones ganadas
+    * @apiSuccess (200 (OK)) {String[]} user.following Lista de usuarixs que sigue
+    * @apiSuccess (200 (OK)) {String[]} user.followers Lista de usuarixs que le siguen
     * @apiSuccess (200 (OK)) {Number} user.answered Puntaje de usuarix (cantidad de preguntas respondidas)
     *   
     * @apiSuccessExample {type} Success-Response:
@@ -206,6 +212,13 @@ class Controller {
     *    "user": {
     *        "_id": "5ceefe4439bc8a4438d37426",
     *        "username": "ada",
+    *        "competitions_won": 3,
+    *        "following": [
+    *           "random_citizen"   
+    *        ],
+    *        "followers": [
+    *           "random_citizen"
+    *        ]
     *        "answered": 234
     *    }     
     * }
@@ -217,8 +230,17 @@ class Controller {
             const collection = await db.getCollection(COLLECTIONS.USERS);
             const [ user ] = await collection.aggregate([
                     { $match: { username: username }},
+                    { $lookup: {
+                            from: 'users',
+                            localField: 'username',
+                            foreignField: 'following',
+                            as: 'followers'
+                        }},
                     { $project: { 
                         username: 1,
+                        following: 1,
+                        followers: '$followers.username',
+                        competitions_won: 1,
                         answered: { $cond: { if: { $isArray: '$answered' }, then: { $size: '$answered' }, else: 0} }
                     }}]).toArray()
 
@@ -467,6 +489,21 @@ class Controller {
                 trace: error.stack
             });
         }
+    }
+
+    static async increaseCompetitionsWon(username) {
+        try {
+            const collection = await db.getCollection(COLLECTIONS.USERS);
+            const user = await collection.updateOne(
+                { username: username }, 
+                { $inc: { competitions_won: 1 } });
+
+            if (!user) {
+                throw new Error('Usuarix inexistente');
+            }
+        } catch (error) {
+            console.log(error);
+        }            
     }
 }
 
