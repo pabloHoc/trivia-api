@@ -49,13 +49,13 @@ class Controller {
      */
     static async add(req, res) {
         try {
-            let {name, color = "#FFFFFF"} = req.body;
+            let {category, color = "#FFFFFF"} = req.body;
             const collection = await db.getCollection(COLLECTIONS.CATEGORIES);
 
-            name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+            category = category.charAt(0).toUpperCase() + category.slice(1).toLowerCase();
 
             await collection.updateOne(
-                { name: name }, 
+                { name: category }, 
                 { $setOnInsert: { color: color }},
                 { upsert: true });
 
