@@ -1,9 +1,13 @@
 const 
-    notificationController = require('./notifications/controller'),
-    userController = require('./users/controller'),
     emitter = require('events'),
-    eventEmitter = new emitter.EventEmitter()
+    eventEmitter = new emitter.EventEmitter(),
     EVENTS = require('./events');
+
+module.exports = eventEmitter;
+
+const
+    notificationController = require('./notifications/controller'),
+    userController = require('./users/controller');
 
 
 eventEmitter.on(EVENTS.LEVEL_UP, data => { notificationController.addNotification(EVENTS.LEVEL_UP, data) });
@@ -16,5 +20,3 @@ eventEmitter.on(EVENTS.COMPETITION_WON, data => {
 eventEmitter.on(EVENTS.COMPETITION_DRAW, data => { notificationController.addNotification(EVENTS.COMPETITION_DRAW, data) });
 eventEmitter.on(EVENTS.COMPETITION_LOST, data => { notificationController.addNotification(EVENTS.COMPETITION_LOST, data) });
 eventEmitter.on(EVENTS.NEW_CHALLENGE, data => { notificationController.addNotification(EVENTS.NEW_CHALLENGE, data) });
-
-module.exports = eventEmitter;

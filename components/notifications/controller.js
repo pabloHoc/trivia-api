@@ -69,8 +69,11 @@ class Controller {
     */ 
     static async get(req, res) {
         const { username } = req.body;
-        const { limit = 5, skip = 0} = req.params;
+        let { limit = 5, page = 0} = req.params;
 
+        limit = parseInt(limit);
+        page = parseInt(page);
+        
         try {
             const collection = await db.getCollection(COLLECTIONS.NOTIFICATIONS);
             const result = await collection.aggregate([
@@ -78,11 +81,19 @@ class Controller {
                     { $unwind: '$notifications'}, 
                     { $sort: { 'notifications.date': -1 }}, 
                     { $group: {_id:"$_id", notifications: { $push: '$notifications' }}},
-                    { $skip: skip * limit }, 
-                    { $limit: limit }
+                    { $project: { _id: 1, notifications: { $slice: ['$notifications', limit * page, limit]}}}
             ]).toArray();
             
             const notifications = result[0] ? result[0].notifications : [];
+
+            const updatedNotif = await collection.findOne({ username: username });
+            
+            for(let i = updatedNotif.notifications.length - limit - limit * page; i < updatedNotif.notifications.length - limit * page; i++) {
+                if (updatedNotif.notifications[i])
+                    updatedNotif.notifications[i].read = true;
+            }
+            
+            collection.updateOne({ username: username }, { $set: { notifications: updatedNotif.notifications }});
 
             res.status(200).send({
                 success: true,
