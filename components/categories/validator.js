@@ -7,9 +7,7 @@ module.exports = method => {
         case 'addCateogry':
             return [
                 check('name', MSGS.REQUIRED).exists(),
-                check('color', MSGS.REQUIRED).exists(),
                 check('name', MSGS.STRING_REQUIRED).isString(),
-                check('color', MSGS.STRING_REQUIRED).isString(),
             ]
         default:
             return [];            

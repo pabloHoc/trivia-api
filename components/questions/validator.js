@@ -13,7 +13,7 @@ module.exports = method => {
                 check('category', MSGS.REQUIRED).exists(),
 
                 check('title', MSGS.STRING_REQUIRED).isString(),
-                check('answer', MSGS.NUMBER_REQUIRED).isNumeric(),
+                check('answer', MSGS.STRING_REQUIRED).isString(),
                 check('answers', MSGS.ARRAY_REQUIRED).isArray(),
                 check('answers').custom(answers => validators.minItems(answers, 3)),
                 check('category', MSGS.STRING_REQUIRED).isString(),

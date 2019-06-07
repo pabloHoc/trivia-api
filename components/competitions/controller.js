@@ -6,6 +6,38 @@ const
     EVENTS = require('./../notifications/events');
 
 class Controller {
+    /**
+     * @api {post} /v1/competitions/invite/:username/:category? Desafiar a competencia
+     * @apiName addcompetition
+     * @apiGroup Competiciones
+     * @apiVersion  1.0.0
+     * @apiDescription Desafía a unx usuarix a una competición 
+     * @apiExample {js} Ejemplo de uso:
+     *     fetch("https://preguntadas.herokuapp.com/v1/competitions/invite/ada", {
+     *          headers: {
+     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
+     *          },
+     *          method: "post",
+     *     }).then(function(result) {
+     *          return result.json();
+     *     }).then(function(result) {
+     *     
+     *     }).catch(function(error) {
+     *     
+     *     });
+     * 
+     * @apiParam  {String} username Nombre de usuarix que se quiere desafiar 
+     * @apiParam  {String} [category="random"] Categoría del desafío
+     * 
+     * @apiSuccess (200 (OK)) {Boolean} success Resultado de la operación
+     * @apiSuccess (200 (OK)) {String} message Mensaje resultado de la operación
+     * 
+     * @apiSuccessExample {type} Success-Response:
+     * {
+     *     "success": "true",
+     *     "message": "Competición creada exitosamente" 
+     * }
+     */
     static async add(req, res) {
         let { challenged, category = 'random' } = req.params;
         let { username } = req.body;
@@ -58,6 +90,57 @@ class Controller {
         }
     }
 
+    /**
+     * @api {get} /v1/:status?/:page? Obtener competencias
+     * @apiName getcompetitions
+     * @apiGroup Competiciones
+     * @apiVersion  1.0.0
+     * @apiDescription Obtiene un listado de las competencias 
+     * @apiExample {js} Ejemplo de uso:
+     *     fetch("https://preguntadas.herokuapp.com/v1/competitions/won", {
+     *          headers: {
+     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
+     *          },
+     *          method: "get"
+     *     }).then(function(result) {
+     *          return result.json();
+     *     }).then(function(result) {
+     *     
+     *     }).catch(function(error) {
+     *     
+     *     });
+     * 
+     * @apiParam  {string="all","pending","played","finished","won","draw","lost"} [filter="all"] Filtro de las competencias por estado 
+     * @apiParam  {Number} [page=0] Número de página de las competencias (10 por página)
+     * 
+     * @apiSuccess (200 (OK)) {Boolean} success Resultado de la operación
+     * @apiSuccess (200 (OK)) {Object[]} competitions Listado de competiciones
+     * @apiSuccess (200 (OK)) {String} competitions._id Id de la competición
+     * @apiSuccess (200 (OK)) {String} competitions.challenger Creadorx de la competición
+     * @apiSuccess (200 (OK)) {String} competitions.challenged Invitadx de la competición
+     * @apiSuccess (200 (OK)) {Number} competitions.challenger_points Preguntas bien respondidas por lx creadorx de la competición
+     * @apiSuccess (200 (OK)) {Number} competitions.challenged_points Preguntas bien respondidas por lx invitadx de la competición
+     * @apiSuccess (200 (OK)) {Boolean} competitions.challenger_finished Creadorx de la competición terminó de jugar
+     * @apiSuccess (200 (OK)) {Boolean} competitions.challenged_finished Invitadx de la competición terminó de jugar
+     * @apiSuccess (200 (OK)) {String} competitions.category Categoría de la competición
+     * 
+     * @apiSuccessExample {type} Success-Response:
+     *   {
+     *   "success": true,
+     *   "competitions": [
+     *           {
+     *               "_id": "5cf412f474f3091a907f9658",
+     *               "challenger": "pablo",
+     *               "challenged": "user",
+     *               "challenger_points": 7,
+     *               "challenged_points": 7,
+     *               "challenger_finished": true,
+     *               "challenged_finished": true,
+     *               "category": "random"
+     *           }
+     *       ]
+     *   }            
+     */
     static async getByUser(req, res) {
         const { username } = req.body;
         let { status = 'all', page = 0 } = req.params;
@@ -170,6 +253,39 @@ class Controller {
         }
     }
 
+        /**
+     * @api {post} /v1/competitions/play/:id/:points Jugar competencia
+     * @apiName playcompetition
+     * @apiGroup Competiciones
+     * @apiVersion  1.0.0
+     * @apiDescription Juega el turno de un jugador actualizando la competencia con la cantidad de preguntas
+     * bien respondidas. Una vez que se juega no puede volverse a jugar la misma competencia. 
+     * @apiExample {js} Ejemplo de uso:
+     *     fetch("https://preguntadas.herokuapp.com/v1/competitions/play/5cf412f474f3091a907f9658/8", {
+     *          headers: {
+     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
+     *          },
+     *          method: "post",
+     *     }).then(function(result) {
+     *          return result.json();
+     *     }).then(function(result) {
+     *     
+     *     }).catch(function(error) {
+     *     
+     *     });
+     * 
+     * @apiParam  {String} id Id de la competición que se quiere jugar 
+     * @apiParam  {Number} points Cantidad de preguntas bien respondidas
+     * 
+     * @apiSuccess (200 (OK)) {Boolean} success Resultado de la operación
+     * @apiSuccess (200 (OK)) {String} message Mensaje resultado de la operación
+     * 
+     * @apiSuccessExample {type} Success-Response:
+     * {
+     *     "success": "true",
+     *     "message": "Competición actualizada exitosamente" 
+     * }
+     */
     static async play(req, res) {
         const { username } = req.body;
         const { id, points } = req.params;
@@ -192,7 +308,8 @@ class Controller {
                 throw new Error('Usuarix ya ha jugado');            
 
             let update = {};
-            
+            points = parseInt(points);
+
             if (competition.challenger === username) {
                 competition.challenger_finished = true;
                 competition.challenger_points = points;

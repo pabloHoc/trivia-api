@@ -27,7 +27,7 @@ class Controller {
      * @apiDescription Registra unx usuarix que no se encuentre registradx ya en la base
      * de datos
      * @apiExample {js} Ejemplo de uso:
-     *     fetch("https://preguntas.herokuapp.com/v1/users/signin", {
+     *     fetch("https://preguntadas.herokuapp.com/v1/users/signin", {
      *          headers: {
      *              "Accept": "application/json",
      *              "Content-Type": "application/json;  charset=UTF-8"
@@ -101,7 +101,7 @@ class Controller {
      * @apiDescription Loguea unx usuarix registradx y devuelve el token de autenticación
      * si los datos ingresados son correctos
      * @apiExample {js} Ejemplo de uso:
-     *     fetch("https://preguntas.herokuapp.com/v1/users/login", {
+     *     fetch("https://preguntadas.herokuapp.com/v1/users/login", {
      *          headers: {
      *              "Accept": "application/json",
      *              "Content-Type": "application/json;  charset=UTF-8"
@@ -181,7 +181,7 @@ class Controller {
     * @apiHeader {String} Authorization Token de autorización.
     * @apiDescription Obtiene la información del perfil de usuarix que se le pasa por parámetro
     * @apiExample {js} Ejemplo de uso:
-    *     fetch("https://preguntas.herokuapp.com/v1/users/ada", {
+    *     fetch("https://preguntadas.herokuapp.com/v1/users/ada", {
     *          headers: {
     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
     *          },
@@ -248,7 +248,7 @@ class Controller {
     * @apiDescription Obtiene una lista con todxs lxs usuarixs, ya sea por puntaje total
     * o por puntaje por categorías
     * @apiExample {js} Ejemplo de uso:
-    *     fetch("https://preguntas.herokuapp.com/v1/users/all/historia", {
+    *     fetch("https://preguntadas.herokuapp.com/v1/users/all/historia", {
     *          headers: {
     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
     *          },
@@ -354,7 +354,7 @@ class Controller {
     * @apiDescription Comenzar a seguir a unx usuarix para que nos lleguen notificaciones cuando suba un nuevo
     * desafío
     * @apiExample {js} Ejemplo de uso:
-    *     fetch("https://preguntas.herokuapp.com/v1/users/follow/ada", {
+    *     fetch("https://preguntadas.herokuapp.com/v1/users/follow/ada", {
     *          headers: {
     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
     *          },
@@ -374,9 +374,7 @@ class Controller {
     * @apiSuccessExample {type} Success-Response:
     * {
     *    "success": true,
-    *    "users": {
-    *        "success": "true",
-    *        "message": "Has comenzado a seguir a ada"
+    *    "message": "Has comenzado a seguir a ada"
     *    }     
     * }
     */
@@ -420,7 +418,7 @@ class Controller {
     * @apiHeader {String} Authorization Token de autorización.
     * @apiDescription Deja de seguir a unx usuarix
     * @apiExample {js} Ejemplo de uso:
-    *     fetch("https://preguntas.herokuapp.com/v1/users/unfollow/ada", {
+    *     fetch("https://preguntadas.herokuapp.com/v1/users/unfollow/ada", {
     *          headers: {
     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
     *          },

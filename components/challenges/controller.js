@@ -92,7 +92,7 @@ class Controller {
     * @apiHeader {String} Authorization Token de autorización.
     * @apiDescription Agrega un desafío
     * @apiExample {js} Ejemplo de uso:
-    *     fetch("https://preguntas.herokuapp.com/v1/challenges", {
+    *     fetch("https://preguntadas.herokuapp.com/v1/challenges", {
     *          headers: {
     *              "Accept": "application/json",
     *              "Content-Type": "application/json; charset=UTF-8"
@@ -124,7 +124,7 @@ class Controller {
     *     });
     * @apiParam  {String} title Enunciado del desafío
     * @apiParam  {String} description Descripción del desafío
-    * @apiParam  {String[10]} questions Lista de las diez preguntas
+    * @apiParam  {String[10]} questions Lista de los ids de las diez preguntas
     * 
     * @apiSuccess (200 (OK)) {Boolean} success Resultado de la operación
     * @apiSuccess (200 (OK)) {String} message Mensaje resultado de la operación
@@ -158,6 +158,15 @@ class Controller {
                 date: new Date(Date.now()).toISOString()
             });
 
+            collection = await db.getCollection(COLLECTIONS.USERS);
+            const followers = await collection.find({ following: user.username }).toArray();
+
+            followers.map(x => eventEmitter.emit(EVENTS.NEW_CHALLENGE, {
+                username: x.username,
+                payload: user.username,
+                extra: title
+            }));
+
             res.status(200).send({
                 success: true,
                 message: 'Desafío agregado con éxito'
@@ -179,7 +188,7 @@ class Controller {
     * @apiHeader {String} Authorization Token de autorización.
     * @apiDescription Obtiene la información de un desafío dado un id
     * @apiExample {js} Ejemplo de uso:
-    *     fetch("https://preguntas.herokuapp.com/v1/challenges/5ceefe4439bc8a4438d37426", {
+    *     fetch("https://preguntadas.herokuapp.com/v1/challenges/5ceefe4439bc8a4438d37426", {
     *          headers: {
     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
     *          },
@@ -230,7 +239,7 @@ class Controller {
     * @apiHeader {String} Authorization Token de autorización.
     * @apiDescription Obtiene un desafío aleatorio
     * @apiExample {js} Ejemplo de uso:
-    *     fetch("https://preguntas.herokuapp.com/v1/challenges/random", {
+    *     fetch("https://preguntadas.herokuapp.com/v1/challenges/random", {
     *          headers: {
     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
     *          },
@@ -281,7 +290,7 @@ class Controller {
     * @apiHeader {String} Authorization Token de autorización.
     * @apiDescription Obtiene un listado de todos los desafíos
     * @apiExample {js} Ejemplo de uso:
-    *     fetch("https://preguntas.herokuapp.com/v1/challenges/all/top", {
+    *     fetch("https://preguntadas.herokuapp.com/v1/challenges/all/top", {
     *          headers: {
     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
     *          },
@@ -349,7 +358,7 @@ class Controller {
     * @apiHeader {String} Authorization Token de autorización.
     * @apiDescription Obtiene un listado de todos los desafíos de unx usuarix
     * @apiExample {js} Ejemplo de uso:
-    *     fetch("https://preguntas.herokuapp.com/v1/challenges/all/top", {
+    *     fetch("https://preguntadas.herokuapp.com/v1/challenges/all/top", {
     *          headers: {
     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
     *          },
@@ -420,13 +429,13 @@ class Controller {
     }
     /**
     * @api {get} /v1/challenges/search/:query/:page? Buscar desafios
-    * @apiName getChallengesByUser
+    * @apiName searchChallenges
     * @apiGroup Desafios
     * @apiVersion  1.0.0
     * @apiHeader {String} Authorization Token de autorización.
     * @apiDescription Busca desafíos que tengan un texto en su título
     * @apiExample {js} Ejemplo de uso:
-    *     fetch("https://preguntas.herokuapp.com/v1/challenges/search/ciencia", {
+    *     fetch("https://preguntadas.herokuapp.com/v1/challenges/search/ciencia", {
     *          headers: {
     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
     *          },
@@ -479,13 +488,13 @@ class Controller {
     }
     /**
     * @api {post} /v1/challenges/upvote/:id? Dar like a desafío
-    * @apiName downvote
-    * @apiGroup Preguntas
+    * @apiName upvoteChallenge
+    * @apiGroup Desafios
     * @apiVersion  1.0.0
     * @apiHeader {String} Authorization Token de autorización.
     * @apiDescription Le suma un like al desafío
     * @apiExample {js} Ejemplo de uso:
-    *     fetch("https://preguntas.herokuapp.com/v1/challenges/like/5cf2ffc54005a8207052616b/", {
+    *     fetch("https://preguntadas.herokuapp.com/v1/challenges/like/5cf2ffc54005a8207052616b/", {
     *          headers: {
     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
     *          },
@@ -510,13 +519,13 @@ class Controller {
 
     /**
     * @api {post} /v1/challenges/downvote/:id? Dar dislike a desafío
-    * @apiName downvote
-    * @apiGroup Preguntas
+    * @apiName downvoteChallenge
+    * @apiGroup Desafios
     * @apiVersion  1.0.0
     * @apiHeader {String} Authorization Token de autorización.
     * @apiDescription Le suma un dislike al desafío
     * @apiExample {js} Ejemplo de uso:
-    *     fetch("https://preguntas.herokuapp.com/v1/challenges/downvote/5cf2ffc54005a8207052616b/", {
+    *     fetch("https://preguntadas.herokuapp.com/v1/challenges/downvote/5cf2ffc54005a8207052616b/", {
     *          headers: {
     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
     *          },

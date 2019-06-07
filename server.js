@@ -1,9 +1,8 @@
 /**
  * TODO: 
- *  ! NOTIFICACIONES SIGUIENDO Y SIGUIENDO EN PERFIL Y NUEVO DESAFIO
  *  ! COMPETICIONES GANADAS
  *  ! NIVELES
- * 
+ *  
  *  * Evitar preguntas repetidas respondidas correctamente
  *  * Evitar desafíos random ya completados
  *  * Agregar cantidad de veces jugadas a desafíos
@@ -13,6 +12,7 @@
  *  * Revisar validaciones faltantes
  *  ? Optimizar posibles queries en asíncrono
  *  ? Chequear discrepancias uso id, ObjectId y username
+ *  * Pasar validators customs a express-validator
  * 
  *  * Hacer modulo router de versiones
  */

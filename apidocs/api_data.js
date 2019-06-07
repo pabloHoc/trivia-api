@@ -29,6 +29,431 @@ define({ "api": [
   },
   {
     "type": "post",
+    "url": "/v1/categories",
+    "title": "Agregar categoria",
+    "name": "addcategory",
+    "group": "Categorias",
+    "version": "1.0.0",
+    "description": "<p>Agrega una categoria</p>",
+    "examples": [
+      {
+        "title": "Ejemplo de uso:",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/categories\", {\n     headers: {\n         \"Accept\": \"application/json\",\n         \"Content-Type\": \"application/json;  charset=UTF-8\",\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"post\",\n     body: JSON.stringify({\n         name: \"Series\",\n         color: \"#F8F8F8\"\n     })  \n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "type": "js"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Nombre de la categoría</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "color",
+            "description": "<p>Código hexadecimal que sirve como etiqueta</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n    \"name\": \"Series\",\n    \"color\": \"#F8F8F8\"\n}",
+          "type": "type"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "200 (OK)": [
+          {
+            "group": "200 (OK)",
+            "type": "Boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>Resultado de la operación</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje resultado de la operación</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "{\n    \"success\": \"true\",\n    \"message\": \"Categoría añadida con éxito\" \n}",
+          "type": "type"
+        }
+      ]
+    },
+    "filename": "../trivia-test/components/categories/controller.js",
+    "groupTitle": "Categorias"
+  },
+  {
+    "type": "get",
+    "url": "/v1/categories/:sort?",
+    "title": "Obtener categorias",
+    "name": "getcategories",
+    "group": "Categorias",
+    "version": "1.0.0",
+    "description": "<p>Agrega una categoria</p>",
+    "examples": [
+      {
+        "title": "Ejemplo de uso:",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/categories/likes\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "type": "js"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "allowedValues": [
+              "\"questions\"",
+              "\"likes\""
+            ],
+            "optional": false,
+            "field": "sort",
+            "description": "<p>Orden de las categorías, por número de preguntas o por likes</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "200 (OK)": [
+          {
+            "group": "200 (OK)",
+            "type": "Boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>Resultado de la operación</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "Object[]",
+            "optional": false,
+            "field": "categories",
+            "description": "<p>Listado de categorías</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "String",
+            "optional": false,
+            "field": "categories.name",
+            "description": "<p>Nombre de la categoría</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "String",
+            "optional": false,
+            "field": "categories.color",
+            "description": "<p>Color de la categoría</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "Number",
+            "optional": false,
+            "field": "categories.questions",
+            "description": "<p>Cantidad de preguntas en la categoría</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "Number",
+            "optional": false,
+            "field": "categories.likes",
+            "description": "<p>Total de likes de preguntas en la categoría</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "{\n    \"success\": true,\n    \"categories\": [\n        {\n            \"name\": \"Historia\",\n            \"color\": \"#F8F8F8\",\n            \"questions\": 544,\n            \"likes\": 350\n        },\n        {\n            \"name\": \"Peliculas\",\n            \"color\": \"#F8F8F8\",\n            \"questions\": 52,\n            \"likes\": 170\n        }\n    ]\n}",
+          "type": "type"
+        }
+      ]
+    },
+    "filename": "../trivia-test/components/categories/controller.js",
+    "groupTitle": "Categorias"
+  },
+  {
+    "type": "post",
+    "url": "/v1/competitions/invite/:username/:category?",
+    "title": "Desafiar a competencia",
+    "name": "addcompetition",
+    "group": "Competiciones",
+    "version": "1.0.0",
+    "description": "<p>Desafía a unx usuarix a una competición</p>",
+    "examples": [
+      {
+        "title": "Ejemplo de uso:",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/competitions/invite/ada\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"post\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "type": "js"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "username",
+            "description": "<p>Nombre de usuarix que se quiere desafiar</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "category",
+            "defaultValue": "random",
+            "description": "<p>Categoría del desafío</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "200 (OK)": [
+          {
+            "group": "200 (OK)",
+            "type": "Boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>Resultado de la operación</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje resultado de la operación</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "{\n    \"success\": \"true\",\n    \"message\": \"Competición creada exitosamente\" \n}",
+          "type": "type"
+        }
+      ]
+    },
+    "filename": "../trivia-test/components/competitions/controller.js",
+    "groupTitle": "Competiciones"
+  },
+  {
+    "type": "get",
+    "url": "/v1/:status?/:page?",
+    "title": "Obtener competencias",
+    "name": "getcompetitions",
+    "group": "Competiciones",
+    "version": "1.0.0",
+    "description": "<p>Obtiene un listado de las competencias</p>",
+    "examples": [
+      {
+        "title": "Ejemplo de uso:",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/competitions/won\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\"\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "type": "js"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "allowedValues": [
+              "\"all\"",
+              "\"pending\"",
+              "\"played\"",
+              "\"finished\"",
+              "\"won\"",
+              "\"draw\"",
+              "\"lost\""
+            ],
+            "optional": true,
+            "field": "filter",
+            "defaultValue": "all",
+            "description": "<p>Filtro de las competencias por estado</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "defaultValue": "0",
+            "description": "<p>Número de página de las competencias (10 por página)</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "200 (OK)": [
+          {
+            "group": "200 (OK)",
+            "type": "Boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>Resultado de la operación</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "Object[]",
+            "optional": false,
+            "field": "competitions",
+            "description": "<p>Listado de competiciones</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "String",
+            "optional": false,
+            "field": "competitions._id",
+            "description": "<p>Id de la competición</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "String",
+            "optional": false,
+            "field": "competitions.challenger",
+            "description": "<p>Creadorx de la competición</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "String",
+            "optional": false,
+            "field": "competitions.challenged",
+            "description": "<p>Invitadx de la competición</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "Number",
+            "optional": false,
+            "field": "competitions.challenger_points",
+            "description": "<p>Preguntas bien respondidas por lx creadorx de la competición</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "Number",
+            "optional": false,
+            "field": "competitions.challenged_points",
+            "description": "<p>Preguntas bien respondidas por lx invitadx de la competición</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "Boolean",
+            "optional": false,
+            "field": "competitions.challenger_finished",
+            "description": "<p>Creadorx de la competición terminó de jugar</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "Boolean",
+            "optional": false,
+            "field": "competitions.challenged_finished",
+            "description": "<p>Invitadx de la competición terminó de jugar</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "String",
+            "optional": false,
+            "field": "competitions.category",
+            "description": "<p>Categoría de la competición</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "{\n\"success\": true,\n\"competitions\": [\n        {\n            \"_id\": \"5cf412f474f3091a907f9658\",\n            \"challenger\": \"pablo\",\n            \"challenged\": \"user\",\n            \"challenger_points\": 7,\n            \"challenged_points\": 7,\n            \"challenger_finished\": true,\n            \"challenged_finished\": true,\n            \"category\": \"random\"\n        }\n    ]\n}",
+          "type": "type"
+        }
+      ]
+    },
+    "filename": "../trivia-test/components/competitions/controller.js",
+    "groupTitle": "Competiciones"
+  },
+  {
+    "type": "post",
+    "url": "/v1/competitions/play/:id/:points",
+    "title": "Jugar competencia",
+    "name": "playcompetition",
+    "group": "Competiciones",
+    "version": "1.0.0",
+    "description": "<p>Juega el turno de un jugador actualizando la competencia con la cantidad de preguntas bien respondidas. Una vez que se juega no puede volverse a jugar la misma competencia.</p>",
+    "examples": [
+      {
+        "title": "Ejemplo de uso:",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/competitions/play/5cf412f474f3091a907f9658/8\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"post\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "type": "js"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Id de la competición que se quiere jugar</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "points",
+            "description": "<p>Cantidad de preguntas bien respondidas</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "200 (OK)": [
+          {
+            "group": "200 (OK)",
+            "type": "Boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>Resultado de la operación</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje resultado de la operación</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "{\n    \"success\": \"true\",\n    \"message\": \"Competición actualizada exitosamente\" \n}",
+          "type": "type"
+        }
+      ]
+    },
+    "filename": "../trivia-test/components/competitions/controller.js",
+    "groupTitle": "Competiciones"
+  },
+  {
+    "type": "post",
     "url": "/v1/challenges/",
     "title": "Agregar desafio",
     "name": "addChallenge",
@@ -51,7 +476,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntas.herokuapp.com/v1/challenges\", {\n     headers: {\n         \"Accept\": \"application/json\",\n         \"Content-Type\": \"application/json; charset=UTF-8\"\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"post\",\n     body: JSON.stringify({\n           title: \"De curiosidades y anécdotas\",\n           description: \"Poné a prueba tu conocimiento inútil o aprendé algo inservible!\",\n           questions: [\n                   \"5cef009125363837987fd841\",\n                   \"5cef00912asfas3837987841\",\n                   \"5cef00912523423837987f41\",\n                   \"5cef00912242343837987d41\",\n                   \"5cef009234234g34597fd841\",\n                   \"5cef234fddsfsfs383797841\",\n                   \"5cef0032423dfs2383787f41\",\n                   \"5cef00912124124ffsd87d41\",\n                   \"546dfgdf2124124ffsd87d41\",\n                   \"5cef00912124124ffsd87d41\",\n               ],\n       })\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/challenges\", {\n     headers: {\n         \"Accept\": \"application/json\",\n         \"Content-Type\": \"application/json; charset=UTF-8\"\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"post\",\n     body: JSON.stringify({\n           title: \"De curiosidades y anécdotas\",\n           description: \"Poné a prueba tu conocimiento inútil o aprendé algo inservible!\",\n           questions: [\n                   \"5cef009125363837987fd841\",\n                   \"5cef00912asfas3837987841\",\n                   \"5cef00912523423837987f41\",\n                   \"5cef00912242343837987d41\",\n                   \"5cef009234234g34597fd841\",\n                   \"5cef234fddsfsfs383797841\",\n                   \"5cef0032423dfs2383787f41\",\n                   \"5cef00912124124ffsd87d41\",\n                   \"546dfgdf2124124ffsd87d41\",\n                   \"5cef00912124124ffsd87d41\",\n               ],\n       })\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
         "type": "js"
       }
     ],
@@ -136,7 +561,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntas.herokuapp.com/v1/challenges/all/top\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/challenges/all/top\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
         "type": "js"
       }
     ],
@@ -311,7 +736,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntas.herokuapp.com/v1/challenges/5ceefe4439bc8a4438d37426\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/challenges/5ceefe4439bc8a4438d37426\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
         "type": "js"
       }
     ],
@@ -473,7 +898,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntas.herokuapp.com/v1/challenges/all/top\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/challenges/all/top\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
         "type": "js"
       }
     ],
@@ -655,7 +1080,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntas.herokuapp.com/v1/challenges/search/ciencia\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/challenges/search/ciencia\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
         "type": "js"
       }
     ],
@@ -825,7 +1250,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntas.herokuapp.com/v1/challenges/random\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/challenges/random\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
         "type": "js"
       }
     ],
@@ -951,6 +1376,86 @@ define({ "api": [
     }
   },
   {
+    "type": "get",
+    "url": "/v1/notificationes/:quantity?/:page?",
+    "title": "Obtener notificaciones",
+    "name": "getNotifications",
+    "group": "Notificaciones",
+    "version": "1.0.0",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Token de autorización.</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Obtiene todas las notificaciones de más nuevas a más viejas. Cuando se las obtiene, aquellas que estén sin leer se actualizan como leídas.</p>",
+    "examples": [
+      {
+        "title": "Ejemplo de uso:",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/challenges/all/top\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "type": "js"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "quantity",
+            "defaultValue": "5",
+            "description": "<p>Cantidad de notificaciones que se desea obtener</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "defaultValue": "0",
+            "description": "<p>Número de página de las notificaciones</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "200 (OK)": [
+          {
+            "group": "200 (OK)",
+            "type": "Boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>Resultado de la operación</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Mensaje resultado de la operación</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "{\n  \"success\": true,\n  \"notifications\": [\n      {\n          \"message\": \"random_citizen te ha vencido 7-9\",\n          \"read\": false\n      },\n      {\n       \"message\": \"random_citizen ha comenzado a seguirte!\",\n       \"read\": false\n   },\n   {\n       \"message\": \"Has empatado contra random_citizen 5-5!\",\n       \"read\": true\n   }",
+          "type": "type"
+        }
+      ]
+    },
+    "filename": "../trivia-test/components/notifications/controller.js",
+    "groupTitle": "Notificaciones"
+  },
+  {
     "type": "post",
     "url": "/v1/questions/",
     "title": "Agregar pregunta",
@@ -974,7 +1479,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntas.herokuapp.com/v1/questions\", {\n     headers: {\n         \"Accept\": \"application/json\",\n         \"Content-Type\": \"application/json;  charset=UTF-8\"\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"post\",\n     body: JSON.stringify({\n           title: \"Por qué razón es conocida Ada Lovelace?\",\n           answer: \"Ser la primera programadora\",\n           answers: [\n                   \"Descubrir un dinosaurio\",\n                   \"Ser la primera programadora\",\n                   \"Jugar muy bien al tenis\"\n                   \"Construir la muralla china\"\n               ],\n           \"category\": \"historia\"\t\t\n       })\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/questions\", {\n     headers: {\n         \"Accept\": \"application/json\",\n         \"Content-Type\": \"application/json;  charset=UTF-8\"\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"post\",\n     body: JSON.stringify({\n           title: \"Por qué razón es conocida Ada Lovelace?\",\n           answer: \"Ser la primera programadora\",\n           answers: [\n                   \"Descubrir un dinosaurio\",\n                   \"Ser la primera programadora\",\n                   \"Jugar muy bien al tenis\"\n                   \"Construir la muralla china\"\n               ],\n           \"category\": \"historia\"\t\t\n       })\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
         "type": "js"
       }
     ],
@@ -1073,7 +1578,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntas.herokuapp.com/v1/questions/answer\", {\n     headers: {\n         \"Accept\": \"application/json\",\n         \"Content-Type\": \"application/json;  charset=UTF-8\"\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"post\",\n     body: JSON.stringify({\n          questions: [\n              \"5cf2ffc04005a82070526169\",\n              \"5cf2ffc54005a8207052616b\",\n              \"5cf2ffd34005a8207052616f\"\n              \"5cf2ffd74005a82070526170\"\n          ],\n       })\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/questions/answer\", {\n     headers: {\n         \"Accept\": \"application/json\",\n         \"Content-Type\": \"application/json;  charset=UTF-8\"\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"post\",\n     body: JSON.stringify({\n          questions: [\n              \"5cf2ffc04005a82070526169\",\n              \"5cf2ffc54005a8207052616b\",\n              \"5cf2ffd34005a8207052616f\"\n              \"5cf2ffd74005a82070526170\"\n          ],\n       })\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
         "type": "js"
       }
     ],
@@ -1144,7 +1649,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntas.herokuapp.com/v1/challenges/like/5cf2ffc54005a8207052616b/\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"post\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/challenges/like/5cf2ffc54005a8207052616b/\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"post\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
         "type": "js"
       }
     ],
@@ -1208,7 +1713,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntas.herokuapp.com/v1/challenges/downvote/5cf2ffc54005a8207052616b/\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"post\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/challenges/downvote/5cf2ffc54005a8207052616b/\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"post\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
         "type": "js"
       }
     ],
@@ -1272,7 +1777,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntas.herokuapp.com/v1/questions/downvote/5cf2ffc54005a8207052616b/\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"post\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/questions/downvote/5cf2ffc54005a8207052616b/\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"post\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
         "type": "js"
       }
     ],
@@ -1336,7 +1841,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntas.herokuapp.com/v1/questions/all\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/questions/all\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
         "type": "js"
       }
     ],
@@ -1476,7 +1981,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntas.herokuapp.com/v1/questions/byuser/ada/top/\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/questions/byuser/ada/top/\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
         "type": "js"
       }
     ],
@@ -1623,7 +2128,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntas.herokuapp.com/v1/questions/bycategory/historia/new\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/questions/bycategory/historia/new\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
         "type": "js"
       }
     ],
@@ -1770,7 +2275,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntas.herokuapp.com/v1/questions/5ceefe4439bc8a4438d37426\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/questions/5ceefe4439bc8a4438d37426\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
         "type": "js"
       }
     ],
@@ -1865,7 +2370,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "{\n   \"success\": true,\n   \"question\": {\n      \"_id\": \"5cf2ffc24005a8207052616a\",\n      \"title\": \"Por qué razón es conocida Ada Lovelace?\",\n      \"answer\": \"Ser la primera programadora\",\n      \"answers\": [\n          \"Descubrir un dinosaurio\",\n          \"Ser la primera programadora\",\n          \"Jugar muy bien al tenis\"\n          \"Construir la muralla china\"\n      ],\n      \"category\": {\n          \"name\": \"historia\",\n          \"color\": \"#F8F8F8\"\n      }\t\t\n   }     \n}",
+          "content": "{\n   \"success\": true,\n   \"question\": {\n      \"_id\": \"5cf2ffc24005a8207052616a\",\n      \"title\": \"Por qué razón es conocida Ada Lovelace?\",\n      \"answer\": \"Ser la primera programadora\",\n      \"answers\": [\n          \"Descubrir un dinosaurio\",\n          \"Ser la primera programadora\",\n          \"Jugar muy bien al tenis\",\n          \"Construir la muralla china\"\n      ],\n      category: {\n          \"name\": \"historia\",\n          \"color\": \"#F8F8F8\"\n      }\t\t\n   }     \n}",
           "type": "type"
         }
       ]
@@ -1897,7 +2402,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntas.herokuapp.com/v1/questions/random\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/questions/random\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
         "type": "js"
       }
     ],
@@ -2011,7 +2516,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntas.herokuapp.com/v1/questions/random/historia\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/questions/random/historia\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
         "type": "js"
       }
     ],
@@ -2138,7 +2643,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntas.herokuapp.com/v1/questions/search/ada\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/questions/search/ada\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
         "type": "js"
       }
     ],
@@ -2273,7 +2778,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntas.herokuapp.com/v1/questions/upvote/5cf2ffc54005a8207052616b\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"post\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/questions/upvote/5cf2ffc54005a8207052616b\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"post\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
         "type": "js"
       }
     ],
@@ -2337,7 +2842,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntas.herokuapp.com/v1/users/follow/ada\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"post\"\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/users/follow/ada\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"post\"\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
         "type": "js"
       }
     ],
@@ -2408,7 +2913,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntas.herokuapp.com/v1/users/all/historia\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\"\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/users/all/historia\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\"\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
         "type": "js"
       }
     ],
@@ -2509,7 +3014,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntas.herokuapp.com/v1/users/ada\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\"\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/users/ada\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\"\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
         "type": "js"
       }
     ],
@@ -2588,7 +3093,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntas.herokuapp.com/v1/users/login\", {\n     headers: {\n         \"Accept\": \"application/json\",\n         \"Content-Type\": \"application/json;  charset=UTF-8\"\n     },\n     method: \"post\",\n     body: JSON.stringify({\n         username: \"ada\",\n         password: \"adaitw\"\n     })  \n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/users/login\", {\n     headers: {\n         \"Accept\": \"application/json\",\n         \"Content-Type\": \"application/json;  charset=UTF-8\"\n     },\n     method: \"post\",\n     body: JSON.stringify({\n         username: \"ada\",\n         password: \"adaitw\"\n     })  \n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
         "type": "js"
       }
     ],
@@ -2667,7 +3172,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntas.herokuapp.com/v1/users/signin\", {\n     headers: {\n         \"Accept\": \"application/json\",\n         \"Content-Type\": \"application/json;  charset=UTF-8\"\n     },\n     method: \"post\",\n     body: JSON.stringify({\n         username: \"ada\",\n         password: \"adaitw\"\n     })  \n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/users/signin\", {\n     headers: {\n         \"Accept\": \"application/json\",\n         \"Content-Type\": \"application/json;  charset=UTF-8\"\n     },\n     method: \"post\",\n     body: JSON.stringify({\n         username: \"ada\",\n         password: \"adaitw\"\n     })  \n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
         "type": "js"
       }
     ],
@@ -2752,7 +3257,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntas.herokuapp.com/v1/users/unfollow/ada\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"post\"\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/users/unfollow/ada\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"post\"\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
         "type": "js"
       }
     ],

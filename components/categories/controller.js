@@ -3,15 +3,61 @@ const
     COLLECTIONS = require('./../../db/collections');
 
 class Controller {
+    /**
+     * @api {post} /v1/categories Agregar categoria
+     * @apiName addcategory
+     * @apiGroup Categorias
+     * @apiVersion  1.0.0
+     * @apiDescription Agrega una categoria
+     * @apiExample {js} Ejemplo de uso:
+     *     fetch("https://preguntadas.herokuapp.com/v1/categories", {
+     *          headers: {
+     *              "Accept": "application/json",
+     *              "Content-Type": "application/json;  charset=UTF-8",
+     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
+     *          },
+     *          method: "post",
+     *          body: JSON.stringify({
+     *              name: "Series",
+     *              color: "#F8F8F8"
+     *          })  
+     *     }).then(function(result) {
+     *          return result.json();
+     *     }).then(function(result) {
+     *     
+     *     }).catch(function(error) {
+     *     
+     *     });
+     * 
+     * @apiParam  {String} name Nombre de la categoría
+     * @apiParam  {String} [color] Código hexadecimal que sirve como etiqueta
+     * 
+     * @apiParamExample  {type} Request-Example:
+     * {
+     *     "name": "Series",
+     *     "color": "#F8F8F8"
+     * }
+     * 
+     * @apiSuccess (200 (OK)) {Boolean} success Resultado de la operación
+     * @apiSuccess (200 (OK)) {String} message Mensaje resultado de la operación
+     * 
+     * @apiSuccessExample {type} Success-Response:
+     * {
+     *     "success": "true",
+     *     "message": "Categoría añadida con éxito" 
+     * }
+     */
     static async add(req, res) {
         try {
-            const {name, color} = req.body;
+            let {name, color = "#FFFFFF"} = req.body;
             const collection = await db.getCollection(COLLECTIONS.CATEGORIES);
 
-            await collection.insertOne({
-                name: name,
-                color: color
-            });
+            name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+
+            await collection.updateOne(
+                { name: name }, 
+                { $setOnInsert: { color: color }},
+                { upsert: true });
 
             res.status(200).send({
                 success: true,
@@ -25,16 +71,62 @@ class Controller {
             });
         }
     }
+
+    /**
+     * @api {get} /v1/categories/:sort? Obtener categorias
+     * @apiName getcategories
+     * @apiGroup Categorias
+     * @apiVersion  1.0.0
+     * @apiDescription Agrega una categoria
+     * @apiExample {js} Ejemplo de uso:
+     *     fetch("https://preguntadas.herokuapp.com/v1/categories/likes", {
+     *          headers: {
+     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
+     *          },
+     *          method: "get",
+     *     }).then(function(result) {
+     *          return result.json();
+     *     }).then(function(result) {
+     *     
+     *     }).catch(function(error) {
+     *     
+     *     });
+     * @apiParam  {string="questions","likes"} sort Orden de las categorías, por número de preguntas o por likes
+     * 
+     * @apiSuccess (200 (OK)) {Boolean} success Resultado de la operación
+     * @apiSuccess (200 (OK)) {Object[]} categories Listado de categorías
+     * @apiSuccess (200 (OK)) {String} categories.name Nombre de la categoría
+     * @apiSuccess (200 (OK)) {String} categories.color Color de la categoría
+     * @apiSuccess (200 (OK)) {Number} categories.questions Cantidad de preguntas en la categoría
+     * @apiSuccess (200 (OK)) {Number} categories.likes Total de likes de preguntas en la categoría
+     * 
+     * @apiSuccessExample {type} Success-Response:
+     *   {
+     *       "success": true,
+     *       "categories": [
+     *           {
+     *               "name": "Historia",
+     *               "color": "#F8F8F8",
+     *               "questions": 544,
+     *               "likes": 350
+     *           },
+     *           {
+     *               "name": "Peliculas",
+     *               "color": "#F8F8F8",
+     *               "questions": 52,
+     *               "likes": 170
+     *           }
+     *       ]
+     *   }
+     */
     static async getAll(req, res) {
         let { sort = 'questions' } = req.params;
 
         switch (sort) {
-            case 'questions':
-                sort = { questions: -1 }
-                break;
             case 'likes':
-                sort = { questions: -1 }
+                sort = { likes: -1 }
                 break;
+            case 'questions':
             default:
                 sort = { questions: -1 }
                 break;
@@ -54,6 +146,7 @@ class Controller {
                 { $group: {
                     _id: { name: '$category.name' },
                     name: { $first: '$category.name'}, 
+                    color: { $first: '$category.color'}, 
                     questions: { $sum: 1 },
                     likes: { $sum: '$likes' }
                 }}, 

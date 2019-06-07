@@ -13,6 +13,7 @@ module.exports = method => {
 
                 check('title', MSGS.STRING_REQUIRED).isString(),
                 check('questions', MSGS.ARRAY_REQUIRED).isArray(),
+                check('questions').custom(questions => validators.eqItems(questions, 10)),
             ]
         case 'getChallenge':
             return [

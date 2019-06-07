@@ -8,5 +8,8 @@ module.exports = {
     },
     MAX_ITEMS: (items) => {
         return `Campo no debe tener más de ${items} items`
+    },
+    EQ_ITEMS: (items) => {
+        return `Campo debe tener exactamente ${items} items`
     }
 }

@@ -46,7 +46,7 @@ class Controller {
     * @apiHeader {String} Authorization Token de autorización.
     * @apiDescription Agrega una pregunta
     * @apiExample {js} Ejemplo de uso:
-    *     fetch("https://preguntas.herokuapp.com/v1/questions", {
+    *     fetch("https://preguntadas.herokuapp.com/v1/questions", {
     *          headers: {
     *              "Accept": "application/json",
     *              "Content-Type": "application/json;  charset=UTF-8"
@@ -160,7 +160,7 @@ class Controller {
     * @apiHeader {String} Authorization Token de autorización.
     * @apiDescription Obtiene la información de una pregunta dado un id
     * @apiExample {js} Ejemplo de uso:
-    *     fetch("https://preguntas.herokuapp.com/v1/questions/5ceefe4439bc8a4438d37426", {
+    *     fetch("https://preguntadas.herokuapp.com/v1/questions/5ceefe4439bc8a4438d37426", {
     *          headers: {
     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
     *          },
@@ -194,10 +194,10 @@ class Controller {
     *       "answers": [
     *           "Descubrir un dinosaurio",
     *           "Ser la primera programadora",
-    *           "Jugar muy bien al tenis"
+    *           "Jugar muy bien al tenis",
     *           "Construir la muralla china"
     *       ],
-    *       "category": {
+    *      "category": {
     *           "name": "historia",
     *           "color": "#F8F8F8"
     *       }		
@@ -243,7 +243,7 @@ class Controller {
     * @apiHeader {String} Authorization Token de autorización.
     * @apiDescription Obtiene 10 preguntas aleatorias
     * @apiExample {js} Ejemplo de uso:
-    *     fetch("https://preguntas.herokuapp.com/v1/questions/random", {
+    *     fetch("https://preguntadas.herokuapp.com/v1/questions/random", {
     *          headers: {
     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
     *          },
@@ -295,7 +295,7 @@ class Controller {
     * @apiHeader {String} Authorization Token de autorización.
     * @apiDescription Obtiene 10 preguntas aleatorias de una categoría
     * @apiExample {js} Ejemplo de uso:
-    *     fetch("https://preguntas.herokuapp.com/v1/questions/random/historia", {
+    *     fetch("https://preguntadas.herokuapp.com/v1/questions/random/historia", {
     *          headers: {
     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
     *          },
@@ -387,7 +387,7 @@ class Controller {
     * @apiHeader {String} Authorization Token de autorización.
     * @apiDescription Suma las preguntas respondidas al puntaje total de lx usuarix
     * @apiExample {js} Ejemplo de uso:
-    *     fetch("https://preguntas.herokuapp.com/v1/questions/answer", {
+    *     fetch("https://preguntadas.herokuapp.com/v1/questions/answer", {
     *          headers: {
     *              "Accept": "application/json",
     *              "Content-Type": "application/json;  charset=UTF-8"
@@ -523,7 +523,7 @@ class Controller {
     * @apiHeader {String} Authorization Token de autorización.
     * @apiDescription Busca preguntas por texto en título
     * @apiExample {js} Ejemplo de uso:
-    *     fetch("https://preguntas.herokuapp.com/v1/questions/search/ada", {
+    *     fetch("https://preguntadas.herokuapp.com/v1/questions/search/ada", {
     *          headers: {
     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
     *          },
@@ -576,7 +576,7 @@ class Controller {
     * @apiHeader {String} Authorization Token de autorización.
     * @apiDescription Obtiene el listado de preguntas de cierta categoría
     * @apiExample {js} Ejemplo de uso:
-    *     fetch("https://preguntas.herokuapp.com/v1/questions/bycategory/historia/new", {
+    *     fetch("https://preguntadas.herokuapp.com/v1/questions/bycategory/historia/new", {
     *          headers: {
     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
     *          },
@@ -647,7 +647,7 @@ class Controller {
     * @apiHeader {String} Authorization Token de autorización.
     * @apiDescription Obtiene el listado de todas las preguntas
     * @apiExample {js} Ejemplo de uso:
-    *     fetch("https://preguntas.herokuapp.com/v1/questions/all", {
+    *     fetch("https://preguntadas.herokuapp.com/v1/questions/all", {
     *          headers: {
     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
     *          },
@@ -709,7 +709,7 @@ class Controller {
     * @apiHeader {String} Authorization Token de autorización.
     * @apiDescription Obtiene el listado de todas las preguntas de unx usuarix
     * @apiExample {js} Ejemplo de uso:
-    *     fetch("https://preguntas.herokuapp.com/v1/questions/byuser/ada/top/", {
+    *     fetch("https://preguntadas.herokuapp.com/v1/questions/byuser/ada/top/", {
     *          headers: {
     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
     *          },
@@ -783,7 +783,7 @@ class Controller {
     * @apiHeader {String} Authorization Token de autorización.
     * @apiDescription Le suma un like a la pregunta
     * @apiExample {js} Ejemplo de uso:
-    *     fetch("https://preguntas.herokuapp.com/v1/questions/upvote/5cf2ffc54005a8207052616b", {
+    *     fetch("https://preguntadas.herokuapp.com/v1/questions/upvote/5cf2ffc54005a8207052616b", {
     *          headers: {
     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
     *          },
@@ -814,7 +814,7 @@ class Controller {
     * @apiHeader {String} Authorization Token de autorización.
     * @apiDescription Le suma un dislike a la pregunta
     * @apiExample {js} Ejemplo de uso:
-    *     fetch("https://preguntas.herokuapp.com/v1/questions/downvote/5cf2ffc54005a8207052616b/", {
+    *     fetch("https://preguntadas.herokuapp.com/v1/questions/downvote/5cf2ffc54005a8207052616b/", {
     *          headers: {
     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
     *          },
