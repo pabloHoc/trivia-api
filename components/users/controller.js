@@ -4,7 +4,7 @@ const
     db = require('./../../db/db'),
     COLLECTIONS = require('./../../db/collections'),
     bcrypt = require('bcrypt'),
-    eventEmitter = require('./../emitter'),
+    eventEmitter = require('../emitter'),
     EVENTS = require('../events');
 
 class Controller {
