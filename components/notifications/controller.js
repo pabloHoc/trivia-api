@@ -81,10 +81,12 @@ class Controller {
                     { $skip: skip * limit }, 
                     { $limit: limit }
             ]).toArray();
+            
+            const notifications = result[0] ? result[0].notifications : [];
 
             res.status(200).send({
                 success: true,
-                notifications: result[0].notifications
+                notifications: notifications
             });
         } catch (error) {
             res.status(400).send({
