@@ -494,7 +494,7 @@ class Controller {
     * @apiHeader {String} Authorization Token de autorización.
     * @apiDescription Le suma un like al desafío
     * @apiExample {js} Ejemplo de uso:
-    *     fetch("https://preguntadas.herokuapp.com/v1/challenges/like/5cf2ffc54005a8207052616b/", {
+    *     fetch("https://preguntadas.herokuapp.com/v1/challenges/upvote/5cf2ffc54005a8207052616b/", {
     *          headers: {
     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
     *          },

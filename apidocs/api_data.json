@@ -502,7 +502,7 @@
             "type": "String[10]",
             "optional": false,
             "field": "questions",
-            "description": "<p>Lista de las diez preguntas</p>"
+            "description": "<p>Lista de los ids de las diez preguntas</p>"
           }
         ]
       }
@@ -530,6 +530,70 @@
         {
           "title": "Success-Response:",
           "content": "{\n   \"success\": true,\n   \"message\": \"Desafío añadido con éxito\"\n}",
+          "type": "type"
+        }
+      ]
+    },
+    "filename": "../trivia-test/components/challenges/controller.js",
+    "groupTitle": "Desafios"
+  },
+  {
+    "type": "post",
+    "url": "/v1/challenges/downvote/:id?",
+    "title": "Dar dislike a desafío",
+    "name": "downvoteChallenge",
+    "group": "Desafios",
+    "version": "1.0.0",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Token de autorización.</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Le suma un dislike al desafío</p>",
+    "examples": [
+      {
+        "title": "Ejemplo de uso:",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/challenges/downvote/5cf2ffc54005a8207052616b/\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"post\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "type": "js"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Id del desafío que se quiere likear</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "200 (OK)": [
+          {
+            "group": "200 (OK)",
+            "type": "Boolean",
+            "optional": false,
+            "field": "result",
+            "description": "<p>Resultado de la operación</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "{\n    \"success\": \"true\",\n}",
           "type": "type"
         }
       ]
@@ -1058,9 +1122,158 @@
   },
   {
     "type": "get",
+    "url": "/v1/challenges/random",
+    "title": "Obtener desafio random",
+    "name": "getRandomChallenge",
+    "group": "Desafios",
+    "version": "1.0.0",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Token de autorización.</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Obtiene un desafío aleatorio</p>",
+    "examples": [
+      {
+        "title": "Ejemplo de uso:",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/challenges/random\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "type": "js"
+      }
+    ],
+    "filename": "../trivia-test/components/challenges/controller.js",
+    "groupTitle": "Desafios",
+    "success": {
+      "fields": {
+        "200 (OK)": [
+          {
+            "group": "200 (OK)",
+            "type": "Boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>Resultado de la operación</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "Object",
+            "optional": false,
+            "field": "challenge",
+            "description": "<p>Información sobre el desafío</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "String",
+            "optional": false,
+            "field": "challenge._id",
+            "description": "<p>Id del desafío</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "String",
+            "optional": false,
+            "field": "challenge.title",
+            "description": "<p>Título del desafío</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "String",
+            "optional": false,
+            "field": "challenge.description",
+            "description": "<p>Descripción del desafío</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "String",
+            "optional": false,
+            "field": "challenge.username",
+            "description": "<p>Usuarix creadorx del desafío</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "Object[10]",
+            "optional": false,
+            "field": "challenge.questions",
+            "description": "<p>Preguntas del desafío</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "Object",
+            "optional": false,
+            "field": "challenge.questions.question",
+            "description": "<p>Datos de la pregunta</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "String",
+            "optional": false,
+            "field": "challenge.questions.question._id",
+            "description": "<p>Id de la preguntada agregada</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "String",
+            "optional": false,
+            "field": "challenge.questions.question.title",
+            "description": "<p>Enunciado de la pregunta</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "String",
+            "optional": false,
+            "field": "challenge.questions.question.answer",
+            "description": "<p>Respuesta correcta</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "String[4]",
+            "optional": false,
+            "field": "challenge.questions.question.answers",
+            "description": "<p>Lista de las cuatro respuestas posibles</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "Object",
+            "optional": false,
+            "field": "challenge.questions.question.category",
+            "description": "<p>Categoría a la que pertenece la pregunta</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "String",
+            "optional": false,
+            "field": "challenge.questions.question.category.name",
+            "description": "<p>Nombre de la categoría</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "String",
+            "optional": false,
+            "field": "challenge.questions.question.category.color",
+            "description": "<p>Color opcional asignado a la categoría</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "{\n   \"success\": true,\n   \"challenge\": {\n      \"_id\": \"5cef1a27a9139458f02b1cbd\",\n      \"title\": \"Por qué razón se conoce a...?\",\n      \"description\": \"Adiviná por qué son famosas históricamente estas personas\",\n      \"username\": \"pablo\",\n      \"questions\": [{\n          \"_id\": \"5cef1a27asdfsdf8f02b1cbd\",\n          \"title\": \"Por qué razón es conocida Ada Lovelace?\",\n          \"answer\": \"Ser la primera programadora\",\n          \"answers\": [\n              \"Descubrir un dinosaurio\",\n              \"Ser la primera programadora\",\n              \"Jugar muy bien al tenis\"\n              \"Construir la muralla china\"\n          ],\n          \"category\": {\n            \"name\": \"historia\",\n             \"color\": \"#F8F8F8\"\n          }\t\t\n      }\n       // +9 questions\n   ]     \n}",
+          "type": "type"
+        }
+      ]
+    }
+  },
+  {
+    "type": "get",
     "url": "/v1/challenges/search/:query/:page?",
     "title": "Buscar desafios",
-    "name": "getChallengesByUser",
+    "name": "searchChallenges",
     "group": "Desafios",
     "version": "1.0.0",
     "header": {
@@ -1227,10 +1440,10 @@
     }
   },
   {
-    "type": "get",
-    "url": "/v1/challenges/random",
-    "title": "Obtener desafio random",
-    "name": "getRandomChallenge",
+    "type": "post",
+    "url": "/v1/challenges/upvote/:id?",
+    "title": "Dar like a desafío",
+    "name": "upvoteChallenge",
     "group": "Desafios",
     "version": "1.0.0",
     "header": {
@@ -1246,16 +1459,27 @@
         ]
       }
     },
-    "description": "<p>Obtiene un desafío aleatorio</p>",
+    "description": "<p>Le suma un like al desafío</p>",
     "examples": [
       {
         "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/challenges/random\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"get\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
+        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/challenges/upvote/5cf2ffc54005a8207052616b/\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"post\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
         "type": "js"
       }
     ],
-    "filename": "../trivia-test/components/challenges/controller.js",
-    "groupTitle": "Desafios",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Id del desafío que se quiere likear</p>"
+          }
+        ]
+      }
+    },
     "success": {
       "fields": {
         "200 (OK)": [
@@ -1263,117 +1487,21 @@
             "group": "200 (OK)",
             "type": "Boolean",
             "optional": false,
-            "field": "success",
+            "field": "result",
             "description": "<p>Resultado de la operación</p>"
-          },
-          {
-            "group": "200 (OK)",
-            "type": "Object",
-            "optional": false,
-            "field": "challenge",
-            "description": "<p>Información sobre el desafío</p>"
-          },
-          {
-            "group": "200 (OK)",
-            "type": "String",
-            "optional": false,
-            "field": "challenge._id",
-            "description": "<p>Id del desafío</p>"
-          },
-          {
-            "group": "200 (OK)",
-            "type": "String",
-            "optional": false,
-            "field": "challenge.title",
-            "description": "<p>Título del desafío</p>"
-          },
-          {
-            "group": "200 (OK)",
-            "type": "String",
-            "optional": false,
-            "field": "challenge.description",
-            "description": "<p>Descripción del desafío</p>"
-          },
-          {
-            "group": "200 (OK)",
-            "type": "String",
-            "optional": false,
-            "field": "challenge.username",
-            "description": "<p>Usuarix creadorx del desafío</p>"
-          },
-          {
-            "group": "200 (OK)",
-            "type": "Object[10]",
-            "optional": false,
-            "field": "challenge.questions",
-            "description": "<p>Preguntas del desafío</p>"
-          },
-          {
-            "group": "200 (OK)",
-            "type": "Object",
-            "optional": false,
-            "field": "challenge.questions.question",
-            "description": "<p>Datos de la pregunta</p>"
-          },
-          {
-            "group": "200 (OK)",
-            "type": "String",
-            "optional": false,
-            "field": "challenge.questions.question._id",
-            "description": "<p>Id de la preguntada agregada</p>"
-          },
-          {
-            "group": "200 (OK)",
-            "type": "String",
-            "optional": false,
-            "field": "challenge.questions.question.title",
-            "description": "<p>Enunciado de la pregunta</p>"
-          },
-          {
-            "group": "200 (OK)",
-            "type": "String",
-            "optional": false,
-            "field": "challenge.questions.question.answer",
-            "description": "<p>Respuesta correcta</p>"
-          },
-          {
-            "group": "200 (OK)",
-            "type": "String[4]",
-            "optional": false,
-            "field": "challenge.questions.question.answers",
-            "description": "<p>Lista de las cuatro respuestas posibles</p>"
-          },
-          {
-            "group": "200 (OK)",
-            "type": "Object",
-            "optional": false,
-            "field": "challenge.questions.question.category",
-            "description": "<p>Categoría a la que pertenece la pregunta</p>"
-          },
-          {
-            "group": "200 (OK)",
-            "type": "String",
-            "optional": false,
-            "field": "challenge.questions.question.category.name",
-            "description": "<p>Nombre de la categoría</p>"
-          },
-          {
-            "group": "200 (OK)",
-            "type": "String",
-            "optional": false,
-            "field": "challenge.questions.question.category.color",
-            "description": "<p>Color opcional asignado a la categoría</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "{\n   \"success\": true,\n   \"challenge\": {\n      \"_id\": \"5cef1a27a9139458f02b1cbd\",\n      \"title\": \"Por qué razón se conoce a...?\",\n      \"description\": \"Adiviná por qué son famosas históricamente estas personas\",\n      \"username\": \"pablo\",\n      \"questions\": [{\n          \"_id\": \"5cef1a27asdfsdf8f02b1cbd\",\n          \"title\": \"Por qué razón es conocida Ada Lovelace?\",\n          \"answer\": \"Ser la primera programadora\",\n          \"answers\": [\n              \"Descubrir un dinosaurio\",\n              \"Ser la primera programadora\",\n              \"Jugar muy bien al tenis\"\n              \"Construir la muralla china\"\n          ],\n          \"category\": {\n            \"name\": \"historia\",\n             \"color\": \"#F8F8F8\"\n          }\t\t\n      }\n       // +9 questions\n   ]     \n}",
+          "content": "{\n    \"success\": \"true\",\n}",
           "type": "type"
         }
       ]
-    }
+    },
+    "filename": "../trivia-test/components/challenges/controller.js",
+    "groupTitle": "Desafios"
   },
   {
     "type": "get",
@@ -1623,134 +1751,6 @@
       ]
     },
     "filename": "../trivia-test/components/questions/controller.js",
-    "groupTitle": "Preguntas"
-  },
-  {
-    "type": "post",
-    "url": "/v1/challenges/upvote/:id?",
-    "title": "Dar like a desafío",
-    "name": "downvote",
-    "group": "Preguntas",
-    "version": "1.0.0",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Token de autorización.</p>"
-          }
-        ]
-      }
-    },
-    "description": "<p>Le suma un like al desafío</p>",
-    "examples": [
-      {
-        "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/challenges/like/5cf2ffc54005a8207052616b/\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"post\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
-        "type": "js"
-      }
-    ],
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "id",
-            "description": "<p>Id del desafío que se quiere likear</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "200 (OK)": [
-          {
-            "group": "200 (OK)",
-            "type": "Boolean",
-            "optional": false,
-            "field": "result",
-            "description": "<p>Resultado de la operación</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "{\n    \"success\": \"true\",\n}",
-          "type": "type"
-        }
-      ]
-    },
-    "filename": "../trivia-test/components/challenges/controller.js",
-    "groupTitle": "Preguntas"
-  },
-  {
-    "type": "post",
-    "url": "/v1/challenges/downvote/:id?",
-    "title": "Dar dislike a desafío",
-    "name": "downvote",
-    "group": "Preguntas",
-    "version": "1.0.0",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Token de autorización.</p>"
-          }
-        ]
-      }
-    },
-    "description": "<p>Le suma un dislike al desafío</p>",
-    "examples": [
-      {
-        "title": "Ejemplo de uso:",
-        "content": "fetch(\"https://preguntadas.herokuapp.com/v1/challenges/downvote/5cf2ffc54005a8207052616b/\", {\n     headers: {\n         \"Authorization\": \"eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0\"\n     },\n     method: \"post\",\n}).then(function(result) {\n     return result.json();\n}).then(function(result) {\n\n}).catch(function(error) {\n\n});",
-        "type": "js"
-      }
-    ],
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "id",
-            "description": "<p>Id del desafío que se quiere likear</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "200 (OK)": [
-          {
-            "group": "200 (OK)",
-            "type": "Boolean",
-            "optional": false,
-            "field": "result",
-            "description": "<p>Resultado de la operación</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "{\n    \"success\": \"true\",\n}",
-          "type": "type"
-        }
-      ]
-    },
-    "filename": "../trivia-test/components/challenges/controller.js",
     "groupTitle": "Preguntas"
   },
   {
@@ -2370,7 +2370,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "{\n   \"success\": true,\n   \"question\": {\n      \"_id\": \"5cf2ffc24005a8207052616a\",\n      \"title\": \"Por qué razón es conocida Ada Lovelace?\",\n      \"answer\": \"Ser la primera programadora\",\n      \"answers\": [\n          \"Descubrir un dinosaurio\",\n          \"Ser la primera programadora\",\n          \"Jugar muy bien al tenis\",\n          \"Construir la muralla china\"\n      ],\n      category: {\n          \"name\": \"historia\",\n          \"color\": \"#F8F8F8\"\n      }\t\t\n   }     \n}",
+          "content": "{\n   \"success\": true,\n   \"question\": {\n      \"_id\": \"5cf2ffc24005a8207052616a\",\n      \"title\": \"Por qué razón es conocida Ada Lovelace?\",\n      \"answer\": \"Ser la primera programadora\",\n      \"answers\": [\n          \"Descubrir un dinosaurio\",\n          \"Ser la primera programadora\",\n          \"Jugar muy bien al tenis\",\n          \"Construir la muralla china\"\n      ],\n     \"category\": {\n          \"name\": \"historia\",\n          \"color\": \"#F8F8F8\"\n      }\t\t\n   }     \n}",
           "type": "type"
         }
       ]
@@ -2881,7 +2881,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "{\n   \"success\": true,\n   \"users\": {\n       \"success\": \"true\",\n       \"message\": \"Has comenzado a seguir a ada\"\n   }     \n}",
+          "content": "{\n   \"success\": true,\n   \"message\": \"Has comenzado a seguir a ada\"\n   }     \n}",
           "type": "type"
         }
       ]
@@ -3066,6 +3066,27 @@
             "group": "200 (OK)",
             "type": "Number",
             "optional": false,
+            "field": "user.competitions_won",
+            "description": "<p>Cantidad de competiciones ganadas</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "String[]",
+            "optional": false,
+            "field": "user.following",
+            "description": "<p>Lista de usuarixs que sigue</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "String[]",
+            "optional": false,
+            "field": "user.followers",
+            "description": "<p>Lista de usuarixs que le siguen</p>"
+          },
+          {
+            "group": "200 (OK)",
+            "type": "Number",
+            "optional": false,
             "field": "user.answered",
             "description": "<p>Puntaje de usuarix (cantidad de preguntas respondidas)</p>"
           }
@@ -3074,7 +3095,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "{\n   \"success\": true,\n   \"user\": {\n       \"_id\": \"5ceefe4439bc8a4438d37426\",\n       \"username\": \"ada\",\n       \"answered\": 234\n   }     \n}",
+          "content": "{\n   \"success\": true,\n   \"user\": {\n       \"_id\": \"5ceefe4439bc8a4438d37426\",\n       \"username\": \"ada\",\n       \"competitions_won\": 3,\n       \"following\": [\n          \"random_citizen\"   \n       ],\n       \"followers\": [\n          \"random_citizen\"\n       ]\n       \"answered\": 234\n   }     \n}",
           "type": "type"
         }
       ]

@@ -94,7 +94,8 @@ class Controller {
         try {
             let user;
             let { username, title, answer, answers, category } = req.body;
-            
+            category = category.charAt(0).toUpperCase() + category.slice(1).toLowerCase();
+
             const findCategory = (category) => { return new Promise(async (resolve, reject) => {
                 let collection = await db.getCollection(COLLECTIONS.CATEGORIES);
                 category = await collection.findOne({ name: category });
@@ -314,6 +315,7 @@ class Controller {
     */
     static async getRandomByCategory(req, res) {
         let { category } = req.params;
+        category = category.charAt(0).toUpperCase() + category.slice(1).toLowerCase();
 
         try {
             let collection = await db.getCollection(COLLECTIONS.CATEGORIES);
@@ -596,6 +598,7 @@ class Controller {
     */
     static async getAllByCategory(req, res) {
         let { category, sort, page = 0 } = req.params;
+        category = category.charAt(0).toUpperCase() + category.slice(1).toLowerCase();
 
         switch (sort) {
             case 'top':

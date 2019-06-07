@@ -55,6 +55,7 @@ class Controller {
                 throw new Error('Usuarix no encontradx');
             
             if (category !== 'random') {
+                category = category.charAt(0).toUpperCase() + category.slice(1).toLowerCase();
                 collection = await db.getCollection(COLLECTIONS.CATEGORIES);
                 category = await collection.findOne({ name: category});
             }

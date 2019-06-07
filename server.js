@@ -13,7 +13,7 @@
  *  ? Optimizar posibles queries en asíncrono
  *  ? Chequear discrepancias uso id, ObjectId y username
  *  * Pasar validators customs a express-validator
- * 
+ *  ! TESTS
  *  * Hacer modulo router de versiones
  */
 
