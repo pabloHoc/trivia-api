@@ -4,7 +4,8 @@ const
     validator = require('./validator'),
     checkValidationResult = require('./../../middlewares/checkValidationResult');
 
-router.get('/:sort?', controller.getAll);
+router.get('/', controller.getAll);
+router.get('/ranking/:sort?', controller.getRanking);
 router.post('/', validator('addCategory'), checkValidationResult, controller.add);
 
 module.exports = router;

@@ -283,14 +283,14 @@ class Controller {
         }
     }
     /**
-    * @api {get} /v1/challenges/all/:sort?/:page? Obtener todos los desafios
+    * @api {get} /v1/challenges/ranking/:sort?/:page? Obtener rankings de desafios
     * @apiName getAllChallenges
-    * @apiGroup Desafios
+    * @apiGroup Rankings
     * @apiVersion  1.0.0
     * @apiHeader {String} Authorization Token de autorización.
-    * @apiDescription Obtiene un listado de todos los desafíos
+    * @apiDescription Obtiene el ranking de todos los desafíos
     * @apiExample {js} Ejemplo de uso:
-    *     fetch("https://preguntadas.herokuapp.com/v1/challenges/all/top", {
+    *     fetch("https://preguntadas.herokuapp.com/v1/challenges/ranking/top", {
     *          headers: {
     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
     *          },

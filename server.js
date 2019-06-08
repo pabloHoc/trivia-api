@@ -1,13 +1,11 @@
 /**
  * TODO: 
- *  ! COMPETICIONES GANADAS
  *  ! NIVELES
  *  
  *  * Evitar preguntas repetidas respondidas correctamente
  *  * Evitar desafíos random ya completados
  *  * Agregar cantidad de veces jugadas a desafíos
  *  * Impedir votos dobles
- *  * Categorias por puntaje de preguntas
  *  ! Sanear queries
  *  * Revisar validaciones faltantes
  *  ? Optimizar posibles queries en asíncrono
@@ -15,6 +13,7 @@
  *  * Pasar validators customs a express-validator
  *  ! TESTS
  *  * Hacer modulo router de versiones
+ *  * Devolver codigos como la gente
  */
 
 const 

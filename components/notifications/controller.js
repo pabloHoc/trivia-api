@@ -25,7 +25,7 @@ class Controller {
         }
     }
     /**
-    * @api {get} /v1/notificationes/:quantity?/:page? Obtener notificaciones
+    * @api {get} /v1/notifications/:quantity?/:page? Obtener notificaciones
     * @apiName getNotifications
     * @apiGroup Notificaciones
     * @apiVersion  1.0.0
@@ -33,7 +33,7 @@ class Controller {
     * @apiDescription Obtiene todas las notificaciones de más nuevas a más viejas. Cuando se las obtiene, aquellas que estén sin leer
     * se actualizan como leídas.
     * @apiExample {js} Ejemplo de uso:
-    *     fetch("https://preguntadas.herokuapp.com/v1/challenges/all/top", {
+    *     fetch("https://preguntadas.herokuapp.com/v1/notifications/10", {
     *          headers: {
     *              "Authorization": "eyJpc3MiOiJ0b3B0YWwuY29tIiwiZXhwIjoxNDI2NDIwODAwLCJodHRwOi8vdG9wdGFsLmNvbS9qd3RfY2xhaW1zL2lzX2FkbWluIjp0cnVlLCJjb21wYW55IjoiVG9wdGFsIiwiYXdlc29tZSI6dHJ1ZX0"
     *          },
