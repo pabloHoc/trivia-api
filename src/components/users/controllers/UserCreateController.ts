@@ -1,34 +1,34 @@
 import { Controller, Result } from '@src/base';
-import { User, IUser } from '@users/entities/User';
+import { User } from '@users/entities/User';
 import { Username, Password } from '@users/values';
 import { UserMapper } from '@users/mappers/UserMapper';
-import { IUserRepository } from '@users/repositories/IUserRepository';
+import { UserRepository } from '@users/repositories/UserRepository';
 
-export class CreateUserController extends Controller {
-    private userRepo: IUserRepository;
+export class UserCreateController extends Controller {
+    private userRepo: UserRepository;
 
-    constructor (userRepo: IUserRepository) {
+    constructor (userRepo: UserRepository) {
         super();
         this.userRepo = userRepo;
     }
 
     public async executeImpl(): Promise<any> {
         try {
-            const { req } = this;
-            const { username, password } = req.body;
+            const { req, userRepo: UserRepo } = this;
+            const { username, password } : {username: string, password: string} = req.body;
             const usernameOrError: Result<Username> = Username.create(username);
             const passwordOrError: Result<Password> = Password.create(password);
-
+        
             const userPropsResult: Result<any> = Result.combine(
                 usernameOrError,
                 passwordOrError
             )
-
+        
             if (userPropsResult.isFailure) {
-                return this.clientError(userPropsResult.error)
+                return this.clientError(userPropsResult.error);
             }
 
-            const exists = await this.userRepo.findByUsername(usernameOrError.getValue().getValue());
+            const exists = await UserRepo.getByUsername(usernameOrError.getValue());
             
             if (exists) {
                 return this.fail('Username already exists');
@@ -36,7 +36,8 @@ export class CreateUserController extends Controller {
 
             const userOrError: Result<User> = User.create({
                 username: usernameOrError.getValue(),
-                password: passwordOrError.getValue()
+                password: passwordOrError.getValue(),
+                following: []
             });
 
             if (userOrError.isFailure) {
@@ -45,7 +46,7 @@ export class CreateUserController extends Controller {
 
             const user: User = userOrError.getValue();
 
-            await this.userRepo.create(UserMapper.toPersistence(user));
+            await UserRepo.create(UserMapper.toPersistence(user));
 
             return this.created();
         } catch (err) {

@@ -19,7 +19,8 @@
     "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.0",
     "mongodb": "^3.2.6",
-    "tsmon": "^0.4.2"
+    "tsmon": "^0.4.2",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",

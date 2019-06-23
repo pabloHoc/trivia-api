@@ -10,13 +10,16 @@
 
 import { Router } from 'express';
 import { Collections } from '@src/db';
-import { CreateUserController } from '@users/controllers/CreateUserController';
 import { UserRepository } from '@users/repositories/UserRepository';
-import { IUserRepository } from '@users/repositories/IUserRepository';
+import { 
+        CreateUserController, 
+        LoginUserController,
+        FollowUserController
+     } from '@users/controllers';
 
 export class UserRouter {
     private userRouter: Router;
-    private userRepo: IUserRepository;
+    private userRepo: UserRepository;
 
     public constructor() {
         this.userRouter = Router();
@@ -30,5 +33,7 @@ export class UserRouter {
 
     private setRoutes(): void {
         this.userRouter.post('/signin', (req, res) => new CreateUserController(this.userRepo).execute(req, res));
+        this.userRouter.post('/login', (req, res) => new LoginUserController(this.userRepo).execute(req, res));
+        this.userRouter.post('/follow/:following', (req, res) => new FollowUserController(this.userRepo).execute(req, res));
     }
 }

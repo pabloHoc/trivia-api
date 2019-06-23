@@ -11,8 +11,8 @@ class Validator {
     private errors: string[] = [];
 
     public constructor(vo: IValidationObject) {
-        this.value = vo[vo.property];
         this.propertyName = Object.keys(vo)[0];
+        this.value = vo[this.propertyName];
         this.validationStarted = true;
     }
 
@@ -25,7 +25,7 @@ class Validator {
         for (const validation of this.validations) {
             if (!validation[1](this.value)) {
                 this.errors.push(validation[0]);
-                this.result = false;
+                return false;
             }
         }
         

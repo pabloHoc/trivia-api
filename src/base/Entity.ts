@@ -1,15 +1,15 @@
+import { UniqueEntityID } from './UniqueEntityID';
+
 const isEntity = (v: any): v is Entity<any> => {
     return v instanceof Entity;
 };
 
-export interface IEntity {
-
-}
-
-export abstract class Entity<T> implements IEntity {
+export abstract class Entity<T> {
     public props: T;
+    public readonly id: UniqueEntityID;
   
-    constructor (props: T) {
+    constructor (props: T, id?: UniqueEntityID) {
+      this.id = id ? id : new UniqueEntityID();
       this.props = props;
     }
   
@@ -29,8 +29,6 @@ export abstract class Entity<T> implements IEntity {
         return false;
       }
   
-      return false;
+      return this.id.equals(object.id);
     }
   }
-
-  // Agregar Guid
