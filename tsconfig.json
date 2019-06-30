@@ -11,7 +11,8 @@
       "baseUrl": "src/",
       "paths": {
         "@src/*": ["*"],
-        "@users/*": ["components/users/*"],
+        "@core": ["core"],
+        "@users/*": ["domains/authentication/users/*"],
         "@categories/*": ["components/categories/*"],
         "@challenges/*": ["components/challenges/*"],
         "@notifications/*": ["components/notifications/*"],

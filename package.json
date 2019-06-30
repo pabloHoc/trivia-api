@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --watch 'src/' --exec ts-node -r dotenv/config src/server.ts -e ts",
+    "start": "nodemon --watch src/ --exec ts-node -r dotenv/config src/server.ts -e ts",
     "debug": "nodemon --inspect -r dotenv/config src/server.ts"
   },
   "author": "Pablo Hoc",
@@ -19,6 +19,7 @@
     "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.0",
     "mongodb": "^3.2.6",
+    "shallow-equal-object": "^1.1.1",
     "tsmon": "^0.4.2",
     "uuid": "^3.3.2"
   },
@@ -34,8 +35,9 @@
   },
   "_moduleAliases": {
     "@src": "src",
+    "@core": "src/core",
     "@components": "src/components",
-    "@users": "src/components/users",
+    "@users": "src/domains/authentication/users",
     "@categories": "src/components/categories",
     "@challenges": "src/components/challenges",
     "@notifications": "src/components/notifications",
