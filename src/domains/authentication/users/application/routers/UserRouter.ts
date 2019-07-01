@@ -12,15 +12,15 @@ import { Router } from 'express';
 import { Collections } from '@src/db';
 import { IUserRepository } from '@src/domains/authentication/users/infra/repositories/IUserRepository';
 import { UserRepository } from '@users/infra/repositories/UserRepository';
-import { UserRegisterController } from '@users/application/controllers';
-import { UserRegisterUseCase } from '@src/domains/authentication/users/application/useCases/UserRegisterUseCase';
+import { UserRegisterController, UserLoginController } from '@users/application/controllers';
+import { UserRegisterUseCase, UserLoginUseCase } from '@users/application/useCases';
 
 export class UserRouter {
     private userRouter: Router;
     private userRepo: IUserRepository;
 
     private userRegisterController: UserRegisterController;
-    // private userLoginController: UserLoginController;
+    private userLoginController: UserLoginController;
     // private userFollowController: UserFollowController;
 
     public constructor() {
@@ -36,7 +36,7 @@ export class UserRouter {
 
     private setControllers(): void {
         this.userRegisterController = new UserRegisterController(new UserRegisterUseCase(this.userRepo));
-        // this.userLoginController = new UserLoginController(new UserLoginService(this.userRepo));
+        this.userLoginController = new UserLoginController(new UserLoginUseCase(this.userRepo));
         // this.userFollowController = new UserFollowController(new UserFollowService(this.userRepo));
     }
 
@@ -44,7 +44,7 @@ export class UserRouter {
         const { userRouter: router } = this;
         
         router.post('/signin', (req, res) => this.userRegisterController.execute(req, res));
-        // router.post('/login', (req, res) => this.userLoginController.execute(req, res));
+        router.post('/login', (req, res) => this.userLoginController.execute(req, res));
         // router.post('/follow/:following', (req, res) => this.userFollowController.execute(req, res));
     }
 }

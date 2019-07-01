@@ -16,7 +16,7 @@ export class Password extends ValueObject<IPasswordProps> {
     get value (): string {
         return this.props.value;
     }
-
+ 
     public static create(password: string): Result<Password> {
         const validation = validate({ password: password })
                             .isNotUndefined()

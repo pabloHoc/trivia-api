@@ -2,22 +2,24 @@ import { IUseCase, Result } from "@core";
 import { User } from "@users/domain/entities/User";
 import { Username, Password } from "@users/domain/values";
 import { IUserRepository } from "@users/infra/repositories/IUserRepository";
+import * as bcrypt from 'bcrypt';
+import * as jwt from 'jsonwebtoken';
+import { secret } from "@src/configs/config";
 
-interface UserRegisterUseCaseRequestDTO {
+interface UserLoginUseCaseRequestDTO {
     username: string,
     password: string
 }
 
-interface UserRegisterUseCaseRespDTO {
-    username: string,
-    password: string
+interface UserLoginUseCaseResponseDTO {
+    token: string
 }
 
-export class UserRegisterUseCase implements IUseCase<UserRegisterUseCaseRequestDTO, Result<User>> {
+export class UserLoginUseCase implements IUseCase<UserLoginUseCaseRequestDTO, Result<UserLoginUseCaseResponseDTO>> {
     
     public constructor(private userRepo: IUserRepository) {}
 
-    public async execute(request: UserRegisterUseCaseRequestDTO): Promise<Result<User>> {
+    public async execute(request: UserLoginUseCaseRequestDTO): Promise<Result<UserLoginUseCaseResponseDTO>> {
         try {
             const { username, password } = request;
             const UserRepo = this.userRepo;
@@ -43,13 +45,19 @@ export class UserRegisterUseCase implements IUseCase<UserRegisterUseCaseRequestD
     
             const exists = await UserRepo.exists(userResult.getValue());
             
-            if (exists)
-                return Result.fail('Username already exists');
+            if (!exists)
+                return Result.fail('Username or password incorrect');
 
-            const user: User = userResult.getValue();
-            await UserRepo.save(user);
+            const user = await UserRepo.getByUsername(usernameResult.getValue());
+                
+            const match = await bcrypt.compare(password, user.props.password.value);
 
-            return Result.ok<User>(user);
+            if (match) {
+                const token = jwt.sign({ username: username }, secret);
+                return Result.ok<UserLoginUseCaseResponseDTO>({ token: token });
+            } else {
+                return Result.fail('Username or password incorrect');
+            }
         } catch (error) {
             return Result.fail(error);
         }

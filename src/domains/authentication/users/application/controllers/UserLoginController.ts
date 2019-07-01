@@ -1,9 +1,9 @@
 import { Controller } from '@core';
-import { UserRegisterUseCase } from '@users/application/useCases';
+import { UserLoginUseCase } from '@users/application/useCases';
 
-export class UserRegisterController extends Controller {
+export class UserLoginController extends Controller {
 
-    constructor (private userCase: UserRegisterUseCase) {
+    constructor (private userCase: UserLoginUseCase) {
         super();
     }
 
@@ -17,7 +17,7 @@ export class UserRegisterController extends Controller {
                 password: password
             });
 
-            return result.isSuccess ? this.created() : this.fail(result.error);
+            return result.isSuccess ? this.ok(result.getValue()) : this.fail(result.error);
         } catch (err) {
             return this.fail(err)
         }    
